@@ -1,0 +1,38 @@
+﻿@model Application.ViewModels.VerifyOtpViewModel
+@{
+    ViewBag.Title = "Verify OTP";
+}
+
+<link rel="stylesheet" href="~/css/otp.css" />
+
+
+<div class="container height-100 d-flex justify-content-center align-items-center">
+    <div class="position-relative">
+        <div class="card p-4 text-center">
+            <h6>Please enter the one-time password <br> to verify your account</h6>
+            <div> <span>A code has been sent to</span> <small>@Model.Email</small> </div>
+            <form asp-action="VerifyOtp" method="post" id="otpForm">
+                <input type="hidden" asp-for="Email" />
+
+                <div id="otp" class="inputs d-flex flex-row justify-content-center mt-3">
+                    <input class="m-2 text-center form-control rounded otp-input" type="text" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otp-input" type="text" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otp-input" type="text" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otp-input" type="text" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otp-input" type="text" maxlength="1" />
+                    <input class="m-2 text-center form-control rounded otp-input" type="text" maxlength="1" />
+                </div>
+
+                <input type="hidden" asp-for="Otp" id="otpHiddenField" />
+
+                <span asp-validation-for="Otp" class="text-danger"></span>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-danger px-4 validate">Verify</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/js/otp.js"></script>
+

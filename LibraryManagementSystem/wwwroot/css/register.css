@@ -94,13 +94,13 @@ input.form-control, select.form-control {
     }
 
 .btn-primary {
-    background-color: #007bff; 
+    background-color: #4a9bc3;
     border: none;
-    padding: 10px 20px; 
-    color: white; 
+    padding: 10px 20px;
+    color: white;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s; 
+    transition: background-color 0.3s;
 }
 
     .btn-primary:hover {

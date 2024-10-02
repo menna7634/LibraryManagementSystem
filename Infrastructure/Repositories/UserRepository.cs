@@ -2,7 +2,9 @@
 using Application.Interfaces;
 using Application.Models;
 using Application.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Application.Helpers;
 
 namespace Infrastructure.Repositories
 {
@@ -10,13 +12,16 @@ namespace Infrastructure.Repositories
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IEmailService _emailService;
 
-        public UserRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public UserRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor , IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _httpContextAccessor = httpContextAccessor;
+            _emailService = emailService;
         }
-
         public async Task<IdentityResult> RegisterAsync(RegisterViewModel model)
         {
             var existingUserByEmail = await _userManager.FindByEmailAsync(model.Email);
@@ -34,24 +39,35 @@ namespace Infrastructure.Repositories
             var user = new ApplicationUser
             {
                 Email = model.Email,
-                UserName = model.FullName,  
+                UserName = model.FullName,
                 PhoneNumber = model.PhoneNumber,
                 Gender = model.Gender,
                 Address = model.Address,
                 DateOfBirth = model.DateOfBirth,
-                IsBlocked=false,
-                JoinedAT= DateTime.UtcNow,
-                
+                IsBlocked = false,
+                JoinedAT = DateTime.UtcNow,
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Member");
+
+                // Generate OTP
+                string otp =Generateotp.GenerateOtp();
+
+                // Store OTP in session
+                _httpContextAccessor.HttpContext.Session.SetString("Otp", otp);
+
+                // Send OTP via email
+                await _emailService.SendEmailAsync(user.Email, "Your OTP" , $"Your OTP is {otp}"); 
+
+                return result;
             }
 
             return result;
         }
+
 
 
         public async Task<ApplicationUser> FindByEmailAsync(string email)

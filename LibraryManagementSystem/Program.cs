@@ -18,7 +18,8 @@ builder.Services.AddDbContext<LibraryDbContext>(option =>
         b => b.MigrationsAssembly(typeof(LibraryDbContext).Assembly.FullName));
 });
 
-
+//session for otp 
+builder.Services.AddSession();
 // Configure The Identity Tables
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<LibraryDbContext>()
@@ -27,6 +28,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 // inject services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 var app = builder.Build();
@@ -46,7 +48,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

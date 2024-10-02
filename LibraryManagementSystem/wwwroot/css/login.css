@@ -31,7 +31,7 @@ h2 {
 }
 
     .form-control:focus {
-        border-color: #007bff;
+        border-color: #4a9bc3;
     }
 
 .password-container {
@@ -44,14 +44,14 @@ h2 {
     top: 10px;
     background: none;
     border: none;
-    color: #007bff;
+    color: #4a9bc3;
     cursor: pointer;
 }
 
 .btn-primary {
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: #4a9bc3;
     color: white;
     border: none;
     border-radius: 5px;
@@ -59,7 +59,7 @@ h2 {
 }
 
     .btn-primary:hover {
-        background-color: #0056b3;
+        background-color: #4a9bc3;
     }
 
 .text-danger {

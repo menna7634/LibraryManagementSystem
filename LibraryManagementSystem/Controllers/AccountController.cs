@@ -34,20 +34,67 @@ namespace LibraryManagementSystem.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model); 
+                return View(model);
             }
 
             var result = await _userRepository.RegisterAsync(model);
 
             if (result.Succeeded)
             {
-                ViewBag.SuccessMessage = "Registration successful! You can now log in.";
-                return View(); 
+                // Store the user's email in TempData to pass to the OTP view
+                TempData["Email"] = model.Email;
+
+                ViewBag.SuccessMessage = "Registration successful! Please check your email for the OTP.";
+                return RedirectToAction("VerifyOtp"); // Redirect to the VerifyOtp action
             }
 
             ViewBag.ErrorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
-            return View(model); 
+            return View(model);
         }
+        [HttpGet]
+        public IActionResult VerifyOtp()
+        {
+            var model = new VerifyOtpViewModel
+            {
+                Email = TempData["Email"]?.ToString(), // Retrieve the email from TempData
+                Otp = string.Empty 
+            };
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> VerifyOtp(VerifyOtpViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.Email))
+            {
+                return NotFound("User not found");
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            var storedOtp = HttpContext.Session.GetString("Otp");
+
+            if (storedOtp != null && storedOtp == model.Otp) 
+            {
+                user.EmailConfirmed = true; 
+                await _userManager.UpdateAsync(user);
+
+                // Clear the OTP from the session after successful verification
+                HttpContext.Session.Remove("Otp");
+
+                return View("RegistrationSuccess"); 
+            }
+
+            ModelState.AddModelError("", "Invalid or expired OTP");
+            return View(model);
+        }
+
+
 
         [HttpGet]
         public IActionResult Login()
