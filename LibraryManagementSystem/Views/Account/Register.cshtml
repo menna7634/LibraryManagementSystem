@@ -1,0 +1,90 @@
+﻿@model Application.ViewModels.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register";
+}
+
+<link rel="stylesheet" href="~/css/register.css" />
+
+<section class="register-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                <div class="image-container">
+                    <img src="@Url.Content("~/Images/library/books1.jpeg")" alt="Library image" class="img-fluid">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2>Registeration</h2>
+
+                @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+                {
+                    <div class="alert alert-success">@ViewBag.SuccessMessage</div>
+                }
+                @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+                {
+                    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+                }
+
+                <form id="registerForm" asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="FullName"></label>
+                        <input asp-for="FullName" class="form-control" placeholder="Enter your full name" required>
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email">Your Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="Enter your email" required>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password">Password</label>
+                        <input type="password" asp-for="Password" class="form-control" placeholder="Enter your password" required>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <div id="password-strength" class="text-muted"></div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword">Confirm your password</label>
+                        <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Confirm your password" required>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber">Phone Number</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" required>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Gender">Gender</label>
+                        <select asp-for="Gender" class="form-control" required>
+                            <option value="">Select Gender</option>
+                            @foreach (var gender in Enum.GetValues(typeof(Application.Enums.Gender)))
+                            {
+                                <option value="@gender">@gender</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Address">Address</label>
+                        <input asp-for="Address" class="form-control" placeholder="Enter your address" required>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="DateOfBirth">Date of Birth</label>
+                        <input asp-for="DateOfBirth" class="form-control" type="date" id="dateOfBirth" required>
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <p class="text-muted">Already have an account? <a href="login.html">Login</a></p>
+                </form>
+
+                <div id="additionalFieldsContainer"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/js/register.js"></script>
