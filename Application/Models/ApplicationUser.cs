@@ -13,8 +13,8 @@ namespace Application.Models
 
         public DateTime JoinedAT { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; }
-        public ICollection<Penalty> Penalties { get; set; }
+        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+        public ICollection<Penalty> Penalties { get; set; } = new List<Penalty>();
 
     }
 }

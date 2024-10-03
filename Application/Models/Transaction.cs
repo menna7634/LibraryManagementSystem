@@ -20,6 +20,6 @@ namespace Application.Models
         public int BookCopyId { get; set; }
         public BookCopy BookCopy { get; set; }
 
-        public ICollection<Penalty> Penalties { get; set; }
+        public ICollection<Penalty> Penalties { get; set; } = new List<Penalty>();
     }
 }

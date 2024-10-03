@@ -6,6 +6,8 @@ namespace Infrastructure.Data
 {
     public class LibraryDbContext : IdentityDbContext<ApplicationUser>
     {
+        public LibraryDbContext()
+        { }
         public LibraryDbContext(DbContextOptions<LibraryDbContext> options) : base(options)
         {
         }
@@ -82,19 +84,102 @@ namespace Infrastructure.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Define property constraints and configurations
+            //Book
             modelBuilder.Entity<Book>()
                 .Property(b => b.Name)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            modelBuilder.Entity<Book>()
+               .Property(b => b.ISBN)
+               .HasMaxLength(13)
+               .IsRequired();
+
+            modelBuilder.Entity<Book>()
+             .Property(b => b.Date)
+             .IsRequired();
+
+            modelBuilder.Entity<Book>()
+                .Property(b => b.Author)
+                .IsRequired();
+
+            modelBuilder.Entity<Book>()
+            .Property(b => b.Description)
+            .HasMaxLength(1000).IsRequired(false);
+
+            // Publisher 
+            modelBuilder.Entity<Publisher>()
+                .Property(p => p.Name)
                 .HasMaxLength(100)
                 .IsRequired();
+
+            modelBuilder.Entity<Publisher>()
+                .Property(p => p.Location)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            modelBuilder.Entity<Publisher>()
+                .Property(p => p.PhoneNumber)
+                .HasMaxLength(15)
+                .IsRequired(false);
+
+
+            // Genre 
+            modelBuilder.Entity<Genre>()
+                .Property(g => g.Name)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            // BookCopy 
+            modelBuilder.Entity<BookCopy>()
+                .Property(bc => bc.Location)
+                .HasMaxLength(50)
+                .IsRequired(false);
+
+            modelBuilder.Entity<BookCopy>()
+                .Property(bc => bc.Available)
+                .IsRequired();
+
+            // ApplicationUser 
 
             modelBuilder.Entity<ApplicationUser>()
                 .Property(u => u.Address)
                 .HasMaxLength(200);
 
-            modelBuilder.Entity<BookCopy>()
-                .Property(bc => bc.Location)
-                .HasMaxLength(50);
+            modelBuilder.Entity<ApplicationUser>()
+               .Property(u => u.DateOfBirth)
+               .IsRequired();
 
+            // Transaction 
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.CheckoutDate)
+                .IsRequired();
+
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.DueDate)
+                .IsRequired();
+
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.ReturnDate)
+                .IsRequired();
+
+            // Penalty 
+            modelBuilder.Entity<Penalty>()
+                .Property(p => p.Amount)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired();
+
+            modelBuilder.Entity<Penalty>()
+                .Property(p => p.IssuedDate)
+                .IsRequired();
+
+            modelBuilder.Entity<Penalty>()
+                .Property(p => p.IsPaid)
+                .IsRequired();
+
+            modelBuilder.Entity<Penalty>()
+                .Property(p => p.PaidAt)
+                .IsRequired(false);
 
             //index
             modelBuilder.Entity<Book>()
@@ -109,7 +194,7 @@ namespace Infrastructure.Data
 
             
             modelBuilder.Entity<BookCopy>()
-                .HasIndex(bc => bc.BookId)
+                .HasIndex(bc => bc.Id)
                 .IsUnique(); 
 
             
@@ -131,8 +216,7 @@ namespace Infrastructure.Data
 
             
             modelBuilder.Entity<Penalty>()
-                .HasIndex(p => new { p.Amount, p.IssuedDate })
-                .IsUnique();
+                .HasIndex(p => new { p.Amount, p.IssuedDate });
 
             
         }
