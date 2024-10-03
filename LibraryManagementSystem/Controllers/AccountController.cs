@@ -58,7 +58,7 @@ namespace LibraryManagementSystem.Controllers
         {
             var model = new VerifyOtpViewModel
             {
-                Email = TempData["Email"]?.ToString(), // Retrieve the email from TempData
+                Email = TempData["Email"]?.ToString()!, // Retrieve the email from TempData
                 Otp = string.Empty 
             };
             return View(model);
@@ -117,6 +117,17 @@ namespace LibraryManagementSystem.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 var roles = await _userManager.GetRolesAsync(user!);
+
+                // Generate the token
+                var token = signInResponse.Token; 
+
+                // Set token in a cookie 
+                Response.Cookies.Append("jwt", token!, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, 
+                    SameSite = SameSiteMode.Strict 
+                });
 
                 // Redirect based on role
                 if (roles.Contains("Admin"))
