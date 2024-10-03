@@ -14,13 +14,15 @@ namespace Infrastructure.Repositories
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEmailService _emailService;
+        private readonly ITokenService _tokenService;
 
-        public UserRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor , IEmailService emailService)
+        public UserRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor , IEmailService emailService , ITokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
             _emailService = emailService;
+            _tokenService=tokenService;
         }
         public async Task<IdentityResult> RegisterAsync(RegisterViewModel model)
         {
@@ -74,17 +76,40 @@ namespace Infrastructure.Repositories
         {
             return await _userManager.FindByEmailAsync(email);
         }
-
-        public async Task<SignInResult> SignInAsync(string email, string password, bool rememberMe)
+        public async Task<SignInResponse> SignInAsync(LoginViewModel model)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user != null)
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
             {
-                return await _signInManager.PasswordSignInAsync(user.UserName, password, rememberMe, lockoutOnFailure: false);
+                return new SignInResponse
+                {
+                    Succeeded = false,
+                    Message = "Invalid email or password." 
+                };
             }
 
-            return SignInResult.Failed;
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+            if (result.Succeeded)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                var token = _tokenService.GenerateToken(user, roles.ToList());
+
+                return new SignInResponse
+                {
+                    Succeeded = true,
+                    Token = token
+                };
+            }
+            return new SignInResponse
+            {
+                Succeeded = false,
+                Message = "Invalid email or password."
+            };
         }
+
+
 
         public async Task SignOutAsync()
         {

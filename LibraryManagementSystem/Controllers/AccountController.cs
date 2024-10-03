@@ -1,8 +1,10 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.ViewModels;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -12,7 +14,7 @@ namespace LibraryManagementSystem.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public AccountController(IUserRepository userRepository , UserManager<ApplicationUser> userManager)
+        public AccountController(IUserRepository userRepository , UserManager<ApplicationUser> userManager )
         {
             _userRepository = userRepository;
             _userManager = userManager;
@@ -101,16 +103,45 @@ namespace LibraryManagementSystem.Controllers
         {
             return View();
         }
-
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-              
+                return View(model);
             }
-            return View(model); 
+
+            var signInResponse = await _userRepository.SignInAsync(model);
+
+            if (signInResponse.Succeeded)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var roles = await _userManager.GetRolesAsync(user!);
+
+                // Redirect based on role
+                if (roles.Contains("Admin"))
+                {
+                    return RedirectToAction("Index", "Admin");
+                }
+                else if (roles.Contains("Member"))
+                {
+                    return RedirectToAction("Index", "Member");
+                }
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.ErrorMessage = signInResponse.Message ?? "Invalid email or password.";
+            return View(model);
         }
+
+
+
+
+
+
+
 
     }
 }
+
