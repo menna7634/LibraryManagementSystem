@@ -1,0 +1,237 @@
+.wrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  
+          .navbar {
+      width: 100%;
+     /* background-color: #555;
+     /* overflow: auto;*/
+    
+    }
+    .navbar a {
+      float: left;
+      padding: 12px;
+      color: #455d7a;
+      text-decoration: none;
+      font-size: 20px;
+      width: 13%; /* Four links of equal widths */
+    text-align: center;
+    }
+    .navbar a:hover {
+      background-color: #ececec;
+    }
+    .active {
+      background-color: #FFB6C1;
+    }
+    @media screen and (max-width: 500px) {
+    .navbar a {
+      float: none;
+      display: block;
+      width: 100%;
+      text-align: left;
+    }
+  }
+    body , html 
+  {
+      background-image: url("img.jpg");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      padding: 20px;
+  }
+  .bg-container
+  {
+      width: 150%;
+      height:120% ; 
+      box-sizing: border-box; 
+  
+  }
+   .h2
+   {
+      
+    padding: 130px;
+    padding-right:200px;
+    margin:0px;
+    width: 200px;
+    height: 200px;
+    text-align: justify;
+    size: 100px;
+  }
+  #myBtn
+  {
+    margin: auto;
+    height:44px;
+    width:166.23px;
+    color: #FFB6C1 ;
+  
+  }
+  
+   .text
+   {
+      color: #455d7a;
+   }
+   a {
+  border-bottom: 1px solid black;
+  padding-bottom: 5px;
+  }
+  .text2
+  {
+    color: #455d7a;
+  }
+  body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+  }
+  
+  h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+  } 
+  button {
+      background-color: #ff6666; /* Light Pink */
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+      background-color: #e63946; /* Darker Pink */
+  }
+  body {
+      background-color: #f4f4f9; /* Soft light gray background */
+  }
+  
+  .container {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+  }
+  nav {
+      position: sticky;
+      top: 0;
+      background-color: #333;
+      padding: 10px 0;
+      z-index: 1000;
+  }
+  
+  nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      padding: 0;
+  }
+  
+  nav ul li a {
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+  }
+  
+  nav ul li a:hover {
+      background-color: #ff6666;
+      border-radius: 5px;
+  }
+  .logo {
+      font-size: 1.5rem;
+      padding: 10px;
+  }
+  @media (max-width: 768px) {
+      nav ul {
+          flex-direction: column;
+          align-items: center;
+      }
+  
+      button {
+          width: 100%;
+          margin-top: 10px;
+      }
+  }
+  .features {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 20px;
+    background-color: #f4f4f4;
+}
+
+.feature {
+    text-align: center;
+    max-width: 300px;
+}
+
+.feature i {
+    font-size: 3rem;
+    color: #ff6666;
+    margin-bottom: 10px;
+}
+
+.feature h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+.cta {
+    background-color: #ff6666;
+    color: white;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.cta-button {
+    background-color: white;
+    color: #ff6666;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #e63946;
+    color: white;
+}
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+footer .social-icons a {
+    color: white;
+    margin: 0 10px;
+    font-size: 1.5rem;
+}
+
+footer .social-icons a:hover {
+    color: #ff6666;
+}
+
+.testimonials {
+    background-color: #f4f4f4;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.testimonial {
+    max-width: 600px;
+    margin: 0 auto 30px;
+}
+
+.testimonial p {
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+.testimonial h4 {
+    margin-top: 10px;
+    font-weight: bold;
+}
