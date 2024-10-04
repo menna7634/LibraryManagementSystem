@@ -3,6 +3,7 @@ using Application.Models;
 using Application.ViewModels;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Common;
 
@@ -12,12 +13,14 @@ namespace LibraryManagementSystem.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailService _emailService;
 
 
-        public AccountController(IUserRepository userRepository , UserManager<ApplicationUser> userManager )
+        public AccountController(IUserRepository userRepository , UserManager<ApplicationUser> userManager, IEmailService emailService)
         {
             _userRepository = userRepository;
             _userManager = userManager;
+            _emailService = emailService;
 
         }
         public IActionResult Index()
@@ -148,11 +151,83 @@ namespace LibraryManagementSystem.Controllers
 
 
 
+        [HttpGet]
+        public IActionResult RequestResetPassword()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
 
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> RequestResetPassword(ResetPasswordRequestViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
+            // Check if the user exists
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Email does not exist.");
+                return View(model); 
+            }
+
+            // Generate password reset token
+            var token = await _userRepository.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, token }, protocol: HttpContext.Request.Scheme);
+
+            await _emailService.SendEmailAsync(model.Email, "Reset Password",
+                $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
+
+            return RedirectToAction("ResetPasswordConfirmation");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (result.Succeeded)
+            {
+                ViewBag.SuccessMessage = "Your password has been reset successfully. You can now log in.";
+                return View(model);  
+            }
+
+            else
+            {
+                ViewBag.ErrorMessage = string.Join("<br />", result.Errors.Select(e => e.Description));
+                return View(model); 
+            }
+        }
+   
 
 
     }
+
+
+
 }
+
 

@@ -11,6 +11,8 @@ namespace Application.Interfaces
         Task<IdentityResult> RegisterAsync(RegisterViewModel model);
         Task<ApplicationUser> FindByEmailAsync(string email);
         Task<SignInResponse> SignInAsync(LoginViewModel model);
+        Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user);
+
         Task SignOutAsync();
     }
 }

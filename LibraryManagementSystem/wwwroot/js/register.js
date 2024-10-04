@@ -1,11 +1,10 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("registerForm");
-    const password = document.querySelector('input[name="Password"]');
-    const confirmPassword = document.querySelector('input[name="ConfirmPassword"]');
+    const password = document.getElementById("password");
+    const confirmPassword = document.getElementById("confirmPassword");
     const dateOfBirth = document.getElementById("dateOfBirth");
     const passwordStrength = document.getElementById("password-strength");
-    const addFieldButton = document.getElementById("addField");
-    const additionalFieldsContainer = document.getElementById("additionalFieldsContainer");
+    const togglePassword = document.getElementById("togglePassword");
+    const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
 
     confirmPassword.addEventListener("input", function () {
         if (password.value !== confirmPassword.value) {
@@ -24,7 +23,7 @@
     dateOfBirth.addEventListener("change", function () {
         const selectedDate = new Date(dateOfBirth.value);
         const today = new Date();
-        today.setHours(0, 0, 0, 0); 
+        today.setHours(0, 0, 0, 0);
 
         if (selectedDate >= today) {
             dateOfBirth.setCustomValidity("Date of Birth must be before today");
@@ -34,6 +33,15 @@
         }
     });
 
- 
-});
+    togglePassword.addEventListener("click", function () {
+        const type = password.type === "password" ? "text" : "password";
+        password.type = type;
+        this.textContent = type === "password" ? "Show" : "Hide";
+    });
 
+    toggleConfirmPassword.addEventListener("click", function () {
+        const type = confirmPassword.type === "password" ? "text" : "password";
+        confirmPassword.type = type;
+        this.textContent = type === "password" ? "Show" : "Hide";
+    });
+});

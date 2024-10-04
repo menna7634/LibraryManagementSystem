@@ -109,7 +109,10 @@ namespace Infrastructure.Repositories
             };
         }
 
-
+        public async Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
 
         public async Task SignOutAsync()
         {
