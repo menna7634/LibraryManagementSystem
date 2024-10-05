@@ -15,8 +15,10 @@ namespace Application.ViewModels
         [Required]
         public  string Token { get; set; }
 
-        [Required]
         [DataType(DataType.Password)]
+        [Required(ErrorMessage = "New Password is required.")]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.", MinimumLength = 8)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W])[A-Za-z\d\W]{8,}$", ErrorMessage = "The password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.")]
         public required string NewPassword { get; set; }
 
         [DataType(DataType.Password)]

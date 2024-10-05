@@ -14,14 +14,16 @@ namespace LibraryManagementSystem.Controllers
         private readonly IUserRepository _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
+        private readonly IPasswordValidator<ApplicationUser> _passwordValidator;
 
 
-        public AccountController(IUserRepository userRepository , UserManager<ApplicationUser> userManager, IEmailService emailService)
+
+        public AccountController(IUserRepository userRepository , UserManager<ApplicationUser> userManager, IEmailService emailService, IPasswordValidator<ApplicationUser> passwordValidator)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _emailService = emailService;
-
+            _passwordValidator = passwordValidator; 
         }
         public IActionResult Index()
         {
@@ -205,23 +207,40 @@ namespace LibraryManagementSystem.Controllers
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
             {
-                return NotFound();
+                ModelState.AddModelError("", "User not found.");
+                return View(model);
             }
 
-            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
-            if (result.Succeeded)
+            var passwordValidationResult = await _passwordValidator.ValidateAsync(_userManager, user, model.NewPassword);
+            if (passwordValidationResult.Succeeded)
             {
-                ViewBag.SuccessMessage = "Your password has been reset successfully. You can now log in.";
-                return View(model);  
+                var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    ViewBag.SuccessMessage = "Your password has been reset successfully. You can now log in.";
+                    return View(model);
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
             }
-
             else
             {
-                ViewBag.ErrorMessage = string.Join("<br />", result.Errors.Select(e => e.Description));
-                return View(model); 
+                foreach (var error in passwordValidationResult.Errors)
+                {
+                    ModelState.AddModelError("NewPassword", error.Description);
+                }
             }
+
+            return View(model);
         }
-   
+
+
+
 
 
     }

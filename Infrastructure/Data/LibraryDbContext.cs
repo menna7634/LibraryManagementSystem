@@ -19,8 +19,11 @@ namespace Infrastructure.Data
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Penalty> Penalties { get; set; }
 
-    
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		public DbSet<ContactForm> ContactForms { get; set; }
+
+
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
