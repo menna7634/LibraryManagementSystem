@@ -13,7 +13,9 @@ namespace Application.Models
 
         public DateTime JoinedAT { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+        //relationships
+        public ICollection<Checkout> Checkouts { get; set; } = new List<Checkout>();
+
         public ICollection<Penalty> Penalties { get; set; } = new List<Penalty>();
 
     }

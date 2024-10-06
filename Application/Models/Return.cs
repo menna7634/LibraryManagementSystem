@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Application.Models
 {
-    public class Genre
+    public class Return
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public DateTime ReturnDate { get; set; }
 
-        //relationships
-        public ICollection<Book> Books { get; set; } = new List<Book>();
+        public int CheckoutId { get; set; }
+        public Checkout Checkout { get; set; }
     }
 }

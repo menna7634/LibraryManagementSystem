@@ -16,6 +16,7 @@ namespace Application.Models
         [Phone]
         public string PhoneNumber { get; set; }
 
+        //relationships
         public ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

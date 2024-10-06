@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 
 namespace Application.Models
 {
-    public class Transaction
+    public class Checkout
     {
         public int Id { get; set; }
         public DateTime CheckoutDate { get; set; }
         public DateTime DueDate { get; set; }
-        public DateTime? ReturnDate { get; set; }
 
-        // Relationships
+        //relationships
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         public int BookCopyId { get; set; }
         public BookCopy BookCopy { get; set; }
 
-        public ICollection<Penalty> Penalties { get; set; } = new List<Penalty>();
+        public int ReturnId { get; set; }
+        public Return Return { get; set; }
+
+        public ICollection<Penalty> Penalties { get; set; }= new List<Penalty>();
     }
 }

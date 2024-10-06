@@ -16,8 +16,11 @@ namespace Application.Models
         public string Description { get; set; }
         public DateTime Date { get; set; }
 
+        //relationships
         public ICollection<BookCopy> BookCopies { get; set; }= new List<BookCopy>();
+
         public ICollection<Genre> Genres { get; set; } = new List<Genre>();
+
         public int PublisherId { get; set; }
         public Publisher Publisher { get; set; }
     }

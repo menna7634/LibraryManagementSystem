@@ -9,6 +9,7 @@ namespace Application.Models
     public class Penalty
     {
         public int Id { get; set; }
+        public string Type { get; set; }
         public decimal Amount { get; set; }
         public DateTime IssuedDate { get; set; }
         public bool IsPaid { get; set; }
@@ -18,7 +19,7 @@ namespace Application.Models
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
-        public int TransactionId { get; set; }
-        public Transaction Transaction { get; set; }
+        public int CheckoutId { get; set; }
+        public Checkout Checkout { get; set; }
     }
 }
