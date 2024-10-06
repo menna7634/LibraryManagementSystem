@@ -1,146 +1,123 @@
-﻿body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa; 
-    color: #343a40;
-    margin: 0;
-    padding: 0;
+﻿/* General Body Styling */
+body {
+    background: url('../Images/library/books1.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    backdrop-filter: blur(3px); /* Slightly reduced blur */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
 }
 
+/* Register Section Styling */
 .register-section {
-    padding: 50px 0;
-}
-
-.container {
-    max-width: 900px;
-    margin: auto; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px; 
-    overflow: hidden; 
-}
-
-.row {
     display: flex;
-    flex-wrap: wrap; 
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    position: relative;
 }
 
-.col-md-6 {
-    flex: 1; 
-    padding: 20px; 
+/* Form Container */
+.register-form-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 100%;
 }
 
-.image-container {
-    position: relative; 
-    overflow: hidden; 
-    border-radius: 8px; 
-}
-
-.img-fluid {
-    width: 100%; 
-    height: auto; 
-    transition: transform 0.3s; 
-}
-
-.image-container:hover .img-fluid {
-    transform: scale(1.05); 
-}
-
-.image-container::before {
-    content: ''; 
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3); 
-    transition: background 0.3s; 
-}
-
-.image-container:hover::before {
-    background: rgba(0, 0, 0, 0.5); 
-}
-
+/* Title Styling */
 h2 {
-    font-size: 2rem; 
-    margin-bottom: 20px; 
-    text-align: center; 
+    font-size: 28px;
+    font-weight: 600;
+    color: #343a40;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.alert {
-    margin-top: 15px; 
-    padding: 10px;
-    border-radius: 5px; 
-}
-
-.form-group {
-    margin-bottom: 20px; 
-}
-
+/* Form Fields */
 label {
-    font-weight: bold; 
-    display: block; 
+    font-weight: 500;
+    color: #495057;
 }
 
-input.form-control, select.form-control {
-    padding: 10px; 
-    border-radius: 5px; 
-    border: 1px solid #ced4da; 
-    transition: border-color 0.3s;
+input, select {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 15px;
+    box-sizing: border-box;
 }
 
-    input.form-control:focus, select.form-control:focus {
-        border-color: #80bdff; 
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+/* Password field with eye icon inside */
+.input-group {
+    position: relative;
+}
+
+    .input-group .form-control {
+        padding-right: 40px; /* Space for the eye icon */
     }
 
-.btn-primary {
-    background-color: #4a9bc3;
+    .input-group .input-group-text {
+        position: absolute;
+        right: 10px;
+        top: 50%; /* Center vertically */
+        transform: translateY(-50%); /* Adjust for exact centering */
+        background: none;
+        border: none;
+    }
+
+.input-group-text i {
+    color: #495057;
+    font-size: 18px;
+}
+
+/* Button Styling */
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
     border: none;
     padding: 10px 20px;
-    color: white;
+    font-size: 18px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
 }
 
-    .btn-primary:hover {
-        background-color: #0056b3; 
+    button[type="submit"]:hover {
+        background-color: #0056b3;
     }
 
-.text-muted {
-    text-align: center; 
-    margin-top: 15px; 
+/* Text and Link Styling */
+p.text-muted {
+    margin-top: 10px;
 }
 
-@media (max-width: 768px) {
-    .row {
-        flex-direction: column; 
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
     }
 
-    .col-md-6 {
-        padding: 10px; 
-    }
-}
-.input-group {
-    position: relative; 
-}
-
-.btn-toggle-password {
-    background-color: transparent; 
-    color: #4a9bc3; 
-    font-size: 14px; 
-    cursor: pointer; 
-    padding: 0; 
-    position: absolute; 
-    right: 10px;
-    top: 50%; 
-    transform: translateY(-50%); 
-    z-index: 1;
+/* Alerts Styling */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
 }
 
-input[type="password"] {
-    padding-right: 40px; 
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
 }
 
-
-
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}

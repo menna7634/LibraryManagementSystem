@@ -1,21 +1,43 @@
 ﻿body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    height: 100vh; /* Ensure full height */
 }
 
 .login-section {
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex; /* Use flexbox for layout */
+    height: 100vh; /* Full viewport height */
+}
+
+.left-side {
+    flex: 1; /* Left side takes half the width */
+    position: relative;
+}
+
+.background-image {
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    object-fit: cover; /* Cover the entire area */
+}
+
+.right-side {
+    flex: 1; /* Right side takes half the width */
+    background-color: #fff; /* White background for form */
+    display: flex; /* Enable flexbox */
+    flex-direction: column; /* Column layout */
+    justify-content: flex-start; /* Align items to the top */
+    padding: 20px; /* Add some padding */
+}
+
+.container {
+    width: 100%; /* Full width */
+    margin-left: auto; /* Align to the right */
+    margin-right: auto; /* Align to the right */
 }
 
 h2 {
-    text-align: center;
+    text-align: left; /* Left align heading */
     margin-bottom: 20px;
 }
 
@@ -66,12 +88,12 @@ h2 {
     color: red;
     font-size: 0.875em;
 }
+
 a {
-    color: #4a9bc3; 
-    text-decoration: underline; 
+    color: #4a9bc3;
+    text-decoration: underline;
 }
 
     a:hover {
-        color: #007bff; 
+        color: #007bff;
     }
-

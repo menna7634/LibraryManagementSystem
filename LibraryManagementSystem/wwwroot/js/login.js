@@ -39,7 +39,7 @@
 
         if (!isValid) {
             e.preventDefault();
-            $('#errorMessage').text('Please fix the errors above and try again.').show(); 
+            $('#errorMessage').text('Please fix the errors above and try again.').show();
         }
     });
 });
