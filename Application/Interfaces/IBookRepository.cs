@@ -11,14 +11,11 @@ namespace Application.Interfaces
     public interface IBookRepository 
     {
         public Task AddBookAsync(AddBookVM book);
+        public Task UpdateBookAsync(int id, AddBookVM bookVM);
 
-        //public void UpdateBookAsync(Book book);
-
-        //public void DeleteBookAsync(int Id);
-
-        //public Task<Book> GetById(int Id);
-
-        //public Task<List<Book>> GetAllBooksAsync();
+        public Task<Book> GetBookById(int Id);
+        public Task<IEnumerable<ViewBookVM>> GetAllBooksAsync();
+        public Task DeleteBookAsync(int Id);
 
 
     }
