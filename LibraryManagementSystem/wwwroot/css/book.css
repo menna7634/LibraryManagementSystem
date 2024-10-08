@@ -49,7 +49,7 @@ body {
 
 
 
-/* SIDEBAR */
+ SIDEBAR 
 #sidebar {
     position: fixed;
     top: 0;
@@ -172,13 +172,13 @@ body {
         justify-content: center;
     }
 
-/* SIDEBAR */
+ SIDEBAR 
 
 
 
 
 
-/* CONTENT */
+ CONTENT 
 #content {
     position: relative;
     width: calc(100% - 280px);
@@ -194,7 +194,7 @@ body {
 
 
 
-/* NAVBAR */
+ NAVBAR 
 #content nav {
     height: 56px;
     background: #fbfbfb;
@@ -331,13 +331,13 @@ body {
         left: calc(100% - (25px - 4px) - 2px);
     }
 
-/* NAVBAR */
+ NAVBAR 
 
 
 
 
 
-/* MAIN */
+ MAIN 
 #content main {
     width: 100%;
     padding: 36px 24px;
@@ -581,8 +581,8 @@ body {
                         margin-bottom: 0;
                     }
 
-/* MAIN */
-/* CONTENT */
+ MAIN 
+ CONTENT 
 
 
 
@@ -662,7 +662,7 @@ body {
 
 
 
-/* Start Responsive Query  */
+ Start Responsive Query  
 
 @media (max-width:991px) {
 
@@ -744,4 +744,4 @@ body {
     margin-left: 5% !important;
 }
 
-/* End Responsive Query  */
+ End Responsive Query  
