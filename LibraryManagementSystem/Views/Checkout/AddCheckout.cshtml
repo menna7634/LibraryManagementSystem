@@ -1,0 +1,81 @@
+﻿@model Application.ViewModels.Checkout.AddCheckoutVM
+
+@{
+    ViewData["Title"] = "Create Checkout";
+}
+
+<h2>Add Checkout</h2>
+
+<!-- Success/Error Messages -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var key in ViewData.ModelState.Keys)
+            {
+                var error = ViewData.ModelState[key].Errors.FirstOrDefault();
+                if (error != null)
+                {
+                    <li>@error.ErrorMessage</li>
+                    break;
+                }
+            }
+        </ul>
+    </div>
+}
+
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="BookID">Select Book:</label>
+        <select asp-for="BookID" asp-items="Model.Books" class="form-control" onchange="updateBookCopies()"></select>
+        <span asp-validation-for="BookID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="BookCopyID">Select Book Copy:</label>
+        <select asp-for="BookCopyID" asp-items="Model.BookCopies" class="form-control"></select>
+        <span asp-validation-for="BookCopyID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="UserID">Select User:</label>
+        <select asp-for="UserID" asp-items="Model.Users" class="form-control"></select>
+        <span asp-validation-for="UserID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="DueDate">Due Date:</label>
+        <input type="date" asp-for="DueDate" class="form-control" />
+        <span asp-validation-for="DueDate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Checkout</button>
+</form>
+
+@section Scripts {
+    <script>
+        async function updateBookCopies() {
+            const bookId = document.getElementById('BookID').value;
+            const response = await fetch(`/api/bookcopies/${bookId}`); // Adjust the URL as necessary
+            const bookCopies = await response.json();
+
+            const bookCopySelect = document.getElementById('BookCopyID');
+            bookCopySelect.innerHTML = ''; // Clear existing options
+
+            bookCopies.forEach(bc => {
+                const option = document.createElement('option');
+                option.value = bc.id; // Assuming 'id' is the property for the book copy ID
+                option.textContent = `${bc.bookName} - Copy ID: ${bc.id}`; // Adjust as necessary
+                bookCopySelect.appendChild(option);
+            });
+        }
+    </script>
+}
