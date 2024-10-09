@@ -1,0 +1,70 @@
+﻿body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column; /* Stack header and content vertically */
+    height: 100vh; /* Full height */
+    background-color: #f5f5dc; /* Beige background */
+}
+
+.dashboard-header {
+    width: 100%;
+    background-color: #8B4513; /* Brown header color */
+    color: white;
+    padding: 15px;
+    display: flex; /* Use flex to center content */
+    justify-content: space-between; /* Space between title and search bar */
+    align-items: center; /* Vertically center items */
+}
+
+.search-bar {
+    padding: 8px;
+    width: 200px; /* Adjust the width as needed */
+    border-radius: 5px;
+    border: none;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-grow: 1; /* Allow the content to grow and fill the space */
+}
+
+.sidebar {
+    width: 200px; /* Set width for the sidebar */
+    background-color: #e7f0ff; /* Sidebar background color */
+    padding: 15px;
+    border-radius: 5px;
+}
+
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0; /* Remove default margin */
+    }
+
+        .sidebar ul li {
+            margin: 10px 0; /* Space between items */
+        }
+
+            .sidebar ul li a {
+                text-decoration: none;
+                color: #8B4513; /* Brown color for sidebar links */
+                font-weight: bold;
+            }
+
+.main-content {
+    flex-grow: 1; /* This allows the main content to fill the available space */
+    padding: 20px;
+}
+
+.content-section {
+    display: none; /* Hide all sections by default */
+}
+
+    .content-section.active {
+        display: block; /* Only show the active section */
+    }
+

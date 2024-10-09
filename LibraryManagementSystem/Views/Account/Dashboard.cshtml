@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="~/css/Dashboard.css">
+    <script src="~/js/Dashboard.js"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            Maktabaty
+            <input type="text" class="search-bar" placeholder="Search...">
+        </header>
+        <div class="dashboard-content">
+            <nav class="sidebar">
+                <ul>
+                    <li><a href="#" class="menu-item" data-content="profile">Profile</a></li>
+                    <li><a href="#" class="menu-item" data-content="history">History</a></li>
+                    <li><a href="#" class="menu-item" data-content="penalties">Penalties</a></li>
+                    <li><a href="#" class="menu-item" data-content="books">Books</a></li>
+                    <li><a href="#" class="menu-item" data-content="logout">Logout</a></li>
+                </ul>
+            </nav>
+            <main class="main-content" id="content-area">
+                <!-- Default content for Profile -->
+                <div id="profile" class="content-section active">
+                    <h2>Your Profile</h2>
+                    <p>This is your profile content.</p>
+                </div>
+                <!-- Additional sections for History, Penalties, and Books -->
+                <div id="history" class="content-section">
+                    <h2>History</h2>
+                    <p>This is your history content.</p>
+                </div>
+                <div id="penalties" class="content-section">
+                    <h2>Penalties</h2>
+                    <p>This is your penalties content.</p>
+                </div>
+                <div id="books" class="content-section">
+                    <h2>Books</h2>
+                    <p>This is your books content.</p>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -240,9 +240,15 @@ namespace LibraryManagementSystem.Controllers
         }
 
 
+        public IActionResult Dashboard()
+        {
+            return View(); 
+        }
 
-
-
+        public IActionResult AdminDashboard()
+        {
+            return View();
+        }
     }
 
 
