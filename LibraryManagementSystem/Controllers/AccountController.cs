@@ -137,11 +137,11 @@ namespace LibraryManagementSystem.Controllers
                 // Redirect based on role
                 if (roles.Contains("Admin"))
                 {
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("AdminDashboard");
                 }
                 else if (roles.Contains("Member"))
                 {
-                    return RedirectToAction("Index", "Member");
+                    return RedirectToAction("Dashboard");
                 }
 
                 return RedirectToAction("Index", "Home");

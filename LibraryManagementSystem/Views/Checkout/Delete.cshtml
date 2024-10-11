@@ -1,0 +1,36 @@
+﻿@model Application.ViewModels.Checkout.CheckoutDetailVM
+
+@{
+    ViewData["Title"] = "Delete Checkout";
+}
+
+<h2>Delete Checkout</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
+}
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+    <a asp-action="GetCheckouts" class="btn btn-primary">Go Back to Checkouts</a>
+}
+
+<div>
+    <h4>Are you sure you want to delete this checkout?</h4>
+    <div>
+        <strong>User Name:</strong> @Model.UserName <br />
+        <strong>Book Name:</strong> @Model.BookName <br />
+        <strong>Due Date:</strong> @Model.DueDate.ToShortDateString()
+    </div>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="GetCheckouts" class="btn btn-secondary">Cancel</a>
+</form>

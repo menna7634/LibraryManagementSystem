@@ -1,0 +1,107 @@
+﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.Checkout.CheckoutDetailVM>
+
+@{
+    ViewData["Title"] = "Get Checkouts";
+}
+
+<div class="search-form">
+    <form method="get" asp-action="GetCheckouts">
+        <input type="text" name="searchUser" placeholder="Search by User" value="@ViewData["searchUser"]" />
+        <input type="text" name="searchBook" placeholder="Search by Book" value="@ViewData["searchBook"]" />
+        <input type="date" name="searchDate" value="@ViewData["searchDate"]" />
+
+        <select name="searchStatus" class="form-control">
+            <option value="">All Statuses</option>
+            <option value="Pending" selected="@(ViewData["SearchStatus"]?.ToString() == "Pending")">Pending</option>
+            <option value="Returned" selected="@(ViewData["SearchStatus"]?.ToString() == "Completed")">Returned</option>
+            <option value="Overdue" selected="@(ViewData["SearchStatus"]?.ToString() == "Overdue")">Overdue</option>
+        </select>
+
+
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Book Name</th>
+                <th>Book Copy ID</th>
+                <th>Due Date</th>
+                <th>Status</th> 
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.UserName</td>
+                    <td>@item.BookName</td>
+                    <td>@item.BookCopyID</td>
+                    <td>@item.DueDate.ToShortDateString()</td>
+                    <td>@item.Status</td> 
+                    <td>
+                        <a href="@Url.Action("Edit", "Checkout", new { id = item.Id })" class="btn btn-primary">Edit</a>
+                        <a href="@Url.Action("Delete", "Checkout", new { id = item.Id })" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <ul class="pagination">
+            @if (Model.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("GetCheckouts", new {
+                        searchUser = ViewData["searchUser"],
+                        searchDate = ViewData["searchDate"],
+                        searchBook = ViewData["searchBook"],
+                        searchStatus = ViewData["SearchStatus"], 
+                        pageNumber = Model.CurrentPage - 1,
+                        pageSize = ViewData["pageSize"]
+                    })">Previous</a>
+                </li>
+            }
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("GetCheckouts", new {
+                        searchUser = ViewData["searchUser"],
+                        searchDate = ViewData["searchDate"],
+                        searchBook = ViewData["searchBook"],
+                        searchStatus = ViewData["SearchStatus"], 
+                        pageNumber = i,
+                        pageSize = ViewData["pageSize"]
+                    })">@i</a>
+                </li>
+            }
+
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("GetCheckouts", new {
+                        searchUser = ViewData["searchUser"],
+                        searchDate = ViewData["searchDate"],
+                        searchBook = ViewData["searchBook"],
+                        searchStatus = ViewData["SearchStatus"],
+                        pageSize = ViewData["pageSize"]
+                    })">Next</a>
+                </li>
+            }
+        </ul>
+    </div>
+}
+

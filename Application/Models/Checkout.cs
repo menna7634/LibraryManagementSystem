@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Enums;
 
 namespace Application.Models
 {
@@ -11,6 +12,9 @@ namespace Application.Models
         public int Id { get; set; }
         public DateTime CheckoutDate { get; set; }
         public DateTime DueDate { get; set; }
+
+        public CheckoutStatus ? Status { get; set; } = CheckoutStatus.Pending;
+
 
         //relationships
         public string ApplicationUserId { get; set; }

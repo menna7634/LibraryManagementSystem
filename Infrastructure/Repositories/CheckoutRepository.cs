@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.Enums;
+using Application.Helpers;
+using Application.Interfaces;
 using Application.Models;
 using Application.ViewModels.Checkout;
 using Infrastructure.Data;
@@ -88,6 +90,124 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<Book>> GetBooksAsync()
         {
             return await _libraryDbContext.Books.ToListAsync();
+        }
+
+        public async Task<PaginatedResult<CheckoutDetailVM>> GetCheckoutsAsync(
+          string searchUser,
+          DateTime? searchDate,
+          string searchBook,
+         CheckoutStatus? searchStatus,
+          int pageNumber,
+          int pageSize)
+        {
+            var query = _libraryDbContext.Checkouts
+                .Include(c => c.ApplicationUser)
+                .Include(c => c.BookCopy.Book)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchUser))
+            {
+                query = query.Where(c => c.ApplicationUser.UserName!.Contains(searchUser));
+            }
+
+            if (searchDate.HasValue)
+            {
+                query = query.Where(c => c.DueDate.Date == searchDate.Value.Date);
+            }
+
+            if (!string.IsNullOrEmpty(searchBook))
+            {
+                query = query.Where(c => c.BookCopy.Book.Name.Contains(searchBook));
+            }
+            if (searchStatus.HasValue)
+            {
+                query = query.Where(c => c.Status == searchStatus.Value);
+            }
+            var totalItems = await query.CountAsync();
+            var items = await query
+                .OrderBy(c => c.DueDate)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(c => new CheckoutDetailVM
+                {
+                    Id = c.Id,
+                    UserName = c.ApplicationUser.UserName!,
+                    BookName = c.BookCopy.Book.Name,
+                    BookCopyID = c.BookCopyId,
+                    DueDate = c.DueDate,
+                    Status = c.Status
+                })
+                .ToListAsync();
+
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            return new PaginatedResult<CheckoutDetailVM>
+            {
+                Items = items,
+                CurrentPage = pageNumber,
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
+        }
+
+
+        public async Task<CheckoutDetailVM> GetCheckoutByIdAsync(int id)
+        {
+            var checkout = await _libraryDbContext.Checkouts
+                .Include(c => c.ApplicationUser)
+                .Include(c => c.BookCopy.Book)
+                .Where(c => c.Id == id)
+                .Select(c => new CheckoutDetailVM
+                {
+                    Id = c.Id,
+                    UserName = c.ApplicationUser.UserName!,
+                    BookName = c.BookCopy.Book.Name,
+                    BookCopyID = c.BookCopyId,
+                    DueDate = c.DueDate,
+                   
+                })
+                .FirstOrDefaultAsync();
+
+            return checkout;
+        }
+
+        public async Task<bool> UpdateCheckoutAsync(CheckoutDetailVM checkoutVM)
+        {
+            var checkout = await GetByIdAsync(checkoutVM.Id);
+            if (checkout == null) return false;
+
+            
+            checkout.DueDate = checkoutVM.DueDate;
+
+
+            if (checkoutVM.Status.HasValue)
+            {
+                checkout.Status = checkoutVM.Status.Value;
+
+                // create a record in the 'Returns' table in case of book returned 
+                if (checkout.Status == Application.Enums.CheckoutStatus.Returned)
+                {
+                    var returnRecord = new Return
+                    {
+                        CheckoutId = checkout.Id,
+                        ReturnDate = DateTime.Now
+                    };
+                    await _libraryDbContext.Returns.AddAsync(returnRecord);
+                }
+            }
+   
+            await UpdateAsync(checkout);
+            return true;
+        }
+  
+        public async Task<bool> DeleteCheckoutAsync(int id)
+        {
+            var checkout = await GetByIdAsync(id);
+            if (checkout == null) return false;
+
+           await DeleteAsync(checkout.Id);
+           
+            return true;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Application.Interfaces;
+﻿using Application.Enums;
+using Application.Interfaces;
+using Application.Models;
 using Application.ViewModels.Checkout;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -16,7 +18,6 @@ namespace LibraryManagementSystem.Controllers
             _checkoutRepository = checkoutRepository;
         }
 
-        // GET: Checkout/Create
         public async Task<IActionResult> Create()
         {
             var viewModel = new AddCheckoutVM
@@ -38,7 +39,6 @@ namespace LibraryManagementSystem.Controllers
         }
 
 
-        // POST: Checkout/Create
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -71,28 +71,11 @@ namespace LibraryManagementSystem.Controllers
             }
             catch (Exception ex)
             {
-                // Handle general exceptions
                 ModelState.AddModelError(string.Empty, "An error occurred while processing your request. Please try again.");
                 ModelState.AddModelError(string.Empty, ex.Message); 
                 await PopulateDropdownsAsync(checkoutVM);
                 return View("AddCheckout", checkoutVM);
             }
-        }
-
-
-
-
-
-        public async Task<IActionResult> GetAvailableBookCopies(int bookId)
-        {
-            var bookCopies = (await _checkoutRepository.GetAvailableBookCopiesByBookIdAsync(bookId))
-                .Select(b => new SelectListItem
-                {
-                    Value = b.Id.ToString(),
-                    Text = $"Copy ID: {b.Id}"
-                });
-
-            return Json(bookCopies);
         }
 
         private async Task PopulateDropdownsAsync(AddCheckoutVM checkoutVM)
@@ -132,5 +115,131 @@ namespace LibraryManagementSystem.Controllers
             }));
         }
 
+        public async Task<IActionResult> GetCheckouts(
+         string searchUser,
+         DateTime? searchDate,
+         string searchBook,
+         CheckoutStatus? SearchStatus,
+         int pageNumber = 1,
+         int pageSize = 10)
+        {
+            var result = await _checkoutRepository.GetCheckoutsAsync(
+                searchUser,
+                searchDate,
+                searchBook,
+                SearchStatus,
+                pageNumber,
+                pageSize);
+
+            if (!result.Items.Any())
+            {
+                ViewBag.Message = "No checkouts found for the specified Search criteria you provide";
+            }
+
+            ViewData["searchUser"] = searchUser;
+            ViewData["searchDate"] = searchDate;
+            ViewData["searchBook"] = searchBook;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["pageSize"] = pageSize;
+            ViewData["SearchStatus"] = SearchStatus;
+
+            return View(result);
+        }
+
+        // GET: Checkouts/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var checkout = await _checkoutRepository.GetCheckoutByIdAsync(id); 
+            if (checkout == null)
+            {
+                return NotFound();
+            }
+            return View(checkout);
+        }
+
+      
+      
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CheckoutDetailVM checkoutVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(checkoutVM);
+            }
+
+            try
+            {
+                bool isUpdated = await _checkoutRepository.UpdateCheckoutAsync(checkoutVM);
+                if (isUpdated)
+                {
+                    ViewBag.SuccessMessage = "Checkout updated successfully.";
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Checkout not found or could not be updated.");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"An error occurred: {ex.Message}");
+            }
+
+            return View(checkoutVM);
+        }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var checkout = await _checkoutRepository.GetCheckoutByIdAsync(id);
+
+            if (checkout == null)
+            {
+                ViewBag.ErrorMessage = "The checkout record could not be found.";
+                return RedirectToAction("GetCheckouts");
+            }
+
+            var viewModel = new CheckoutDetailVM
+            {
+                Id = checkout.Id,
+                UserName = checkout.UserName,
+                BookName = checkout.BookName,
+                DueDate = checkout.DueDate
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var isDeleted = await _checkoutRepository.DeleteCheckoutAsync(id);
+
+            if (isDeleted)
+            {
+                ViewBag.SuccessMessage = "Checkout Deleted Successfully.";
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Checkout could not be deleted.";
+            }
+
+            var checkout = await _checkoutRepository.GetCheckoutByIdAsync(id);
+            var viewModel = new CheckoutDetailVM
+            {
+                Id = id,
+                UserName = checkout?.UserName ?? string.Empty,
+                BookName = checkout?.BookName ?? string.Empty,
+                DueDate = checkout?.DueDate ?? DateTime.Now 
+            };
+
+            return View("Delete", viewModel);
+        }
+
+
     }
+
 }

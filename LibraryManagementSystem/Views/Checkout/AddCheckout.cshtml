@@ -6,7 +6,6 @@
 
 <h2>Add Checkout</h2>
 
-<!-- Success/Error Messages -->
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
@@ -20,7 +19,7 @@
         <ul>
             @foreach (var key in ViewData.ModelState.Keys)
             {
-                var error = ViewData.ModelState[key].Errors.FirstOrDefault();
+                var error = ViewData.ModelState[key]!.Errors.FirstOrDefault();
                 if (error != null)
                 {
                     <li>@error.ErrorMessage</li>
@@ -64,16 +63,16 @@
     <script>
         async function updateBookCopies() {
             const bookId = document.getElementById('BookID').value;
-            const response = await fetch(`/api/bookcopies/${bookId}`); // Adjust the URL as necessary
+            const response = await fetch(`/api/bookcopies/${bookId}`); 
             const bookCopies = await response.json();
 
             const bookCopySelect = document.getElementById('BookCopyID');
-            bookCopySelect.innerHTML = ''; // Clear existing options
+            bookCopySelect.innerHTML = '';
 
             bookCopies.forEach(bc => {
                 const option = document.createElement('option');
-                option.value = bc.id; // Assuming 'id' is the property for the book copy ID
-                option.textContent = `${bc.bookName} - Copy ID: ${bc.id}`; // Adjust as necessary
+                option.value = bc.id; 
+                option.textContent = `${bc.bookName} - Copy ID: ${bc.id}`; 
                 bookCopySelect.appendChild(option);
             });
         }
