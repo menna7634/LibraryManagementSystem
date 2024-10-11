@@ -105,6 +105,14 @@ namespace Infrastructure.Repositories
                 .Include(c => c.BookCopy.Book)
                 .AsQueryable();
 
+            foreach (var checkout in query)
+            {
+                if (checkout.DueDate < DateTime.Now && checkout.Status != CheckoutStatus.Overdue)
+                {
+                    checkout.Status =CheckoutStatus.Overdue;
+                }
+            }
+
             if (!string.IsNullOrEmpty(searchUser))
             {
                 query = query.Where(c => c.ApplicationUser.UserName!.Contains(searchUser));
@@ -184,7 +192,7 @@ namespace Infrastructure.Repositories
             {
                 checkout.Status = checkoutVM.Status.Value;
 
-                // create a record in the 'Returns' table in case of book returned 
+                // create a record in the 'Returns' table in case of book returned and remove it from checkout 
                 if (checkout.Status == Application.Enums.CheckoutStatus.Returned)
                 {
                     var returnRecord = new Return
@@ -193,6 +201,7 @@ namespace Infrastructure.Repositories
                         ReturnDate = DateTime.Now
                     };
                     await _libraryDbContext.Returns.AddAsync(returnRecord);
+                    await DeleteAsync(checkout.Id);
                 }
             }
    

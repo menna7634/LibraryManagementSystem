@@ -4,23 +4,47 @@
     ViewData["Title"] = "Get Checkouts";
 }
 
-<div class="search-form">
-    <form method="get" asp-action="GetCheckouts">
-        <input type="text" name="searchUser" placeholder="Search by User" value="@ViewData["searchUser"]" />
-        <input type="text" name="searchBook" placeholder="Search by Book" value="@ViewData["searchBook"]" />
-        <input type="date" name="searchDate" value="@ViewData["searchDate"]" />
-
-        <select name="searchStatus" class="form-control">
-            <option value="">All Statuses</option>
-            <option value="Pending" selected="@(ViewData["SearchStatus"]?.ToString() == "Pending")">Pending</option>
-            <option value="Returned" selected="@(ViewData["SearchStatus"]?.ToString() == "Completed")">Returned</option>
-            <option value="Overdue" selected="@(ViewData["SearchStatus"]?.ToString() == "Overdue")">Overdue</option>
-        </select>
-
-
-        <button type="submit">Search</button>
+<div class="search-form bg-light p-3 rounded shadow-sm mb-4">
+    <form method="get" asp-action="GetCheckouts" class="row g-3">
+        <div class="col-md-3">
+            <input type="text" 
+                   name="searchUser" 
+                   class="form-control" 
+                   placeholder="Search by User" 
+                   value="@ViewData["searchUser"]" />
+        </div>
+        <div class="col-md-3">
+            <input type="text" 
+                   name="searchBook" 
+                   class="form-control" 
+                   placeholder="Search by Book" 
+                   value="@ViewData["searchBook"]" />
+        </div>
+        <div class="col-md-3">
+            <input type="date" 
+                   name="searchDate" 
+                   class="form-control" 
+                   value="@ViewData["searchDate"]" />
+        </div>
+        <div class="col-md-3">
+            <select name="searchStatus" class="form-select">
+                <option value="">All Statuses</option>
+                <option value="Pending" selected="@(ViewData["SearchStatus"]?.ToString() == "Pending")">Pending</option>
+                <option value="Returned" selected="@(ViewData["SearchStatus"]?.ToString() == "Completed")">Returned</option>
+                <option value="Overdue" selected="@(ViewData["SearchStatus"]?.ToString() == "Overdue")">Overdue</option>
+            </select>
+        </div>
+        <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Search
+            </button>
+            <a asp-action="GetCheckouts" class="btn btn-secondary">
+                <i class="bi bi-arrow-clockwise"></i> Reset
+            </a>
+        </div>
     </form>
 </div>
+
 
 @if (!string.IsNullOrEmpty(ViewBag.Message))
 {
