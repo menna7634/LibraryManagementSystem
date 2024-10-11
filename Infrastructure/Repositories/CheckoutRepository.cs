@@ -184,31 +184,37 @@ namespace Infrastructure.Repositories
             var checkout = await GetByIdAsync(checkoutVM.Id);
             if (checkout == null) return false;
 
-            
             checkout.DueDate = checkoutVM.DueDate;
-
 
             if (checkoutVM.Status.HasValue)
             {
                 checkout.Status = checkoutVM.Status.Value;
 
-                // create a record in the 'Returns' table in case of book returned and remove it from checkout 
+                // If the status is Returned, create a return record 
                 if (checkout.Status == Application.Enums.CheckoutStatus.Returned)
                 {
                     var returnRecord = new Return
                     {
                         CheckoutId = checkout.Id,
-                        ReturnDate = DateTime.Now
+                        ReturnDate = DateTime.Now,
                     };
                     await _libraryDbContext.Returns.AddAsync(returnRecord);
-                    await DeleteAsync(checkout.Id);
+
+                    var bookCopy = await GetBookCopyById(checkout.BookCopyId);
+                    if (bookCopy != null)
+                    {
+                        bookCopy.Available = true; // Mark the book copy as available
+                        _libraryDbContext.BookCopies.Update(bookCopy);
+                    }
                 }
             }
-   
+
             await UpdateAsync(checkout);
+            await _libraryDbContext.SaveChangesAsync();
             return true;
         }
-  
+
+
         public async Task<bool> DeleteCheckoutAsync(int id)
         {
             var checkout = await GetByIdAsync(id);

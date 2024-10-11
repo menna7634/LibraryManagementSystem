@@ -4,33 +4,41 @@
     ViewData["Title"] = "Get Checkouts";
 }
 
+<style>
+    .unclickable {
+        pointer-events: none; /* Disable pointer events */
+        opacity: 0.6; /* Make the button look faded */
+        cursor: default; /* Change the cursor to indicate it's not clickable */
+    }
+</style>
+
 <div class="search-form bg-light p-3 rounded shadow-sm mb-4">
     <form method="get" asp-action="GetCheckouts" class="row g-3">
         <div class="col-md-3">
-            <input type="text" 
-                   name="searchUser" 
-                   class="form-control" 
-                   placeholder="Search by User" 
+            <input type="text"
+                   name="searchUser"
+                   class="form-control"
+                   placeholder="Search by User"
                    value="@ViewData["searchUser"]" />
         </div>
         <div class="col-md-3">
-            <input type="text" 
-                   name="searchBook" 
-                   class="form-control" 
-                   placeholder="Search by Book" 
+            <input type="text"
+                   name="searchBook"
+                   class="form-control"
+                   placeholder="Search by Book"
                    value="@ViewData["searchBook"]" />
         </div>
         <div class="col-md-3">
-            <input type="date" 
-                   name="searchDate" 
-                   class="form-control" 
+            <input type="date"
+                   name="searchDate"
+                   class="form-control"
                    value="@ViewData["searchDate"]" />
         </div>
         <div class="col-md-3">
             <select name="searchStatus" class="form-select">
                 <option value="">All Statuses</option>
                 <option value="Pending" selected="@(ViewData["SearchStatus"]?.ToString() == "Pending")">Pending</option>
-                <option value="Returned" selected="@(ViewData["SearchStatus"]?.ToString() == "Completed")">Returned</option>
+                <option value="Returned" selected="@(ViewData["SearchStatus"]?.ToString() == "Returned")">Returned</option>
                 <option value="Overdue" selected="@(ViewData["SearchStatus"]?.ToString() == "Overdue")">Overdue</option>
             </select>
         </div>
@@ -45,7 +53,6 @@
     </form>
 </div>
 
-
 @if (!string.IsNullOrEmpty(ViewBag.Message))
 {
     <div class="alert alert-info">
@@ -54,6 +61,54 @@
 }
 else
 {
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-info shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-info mb-0">Pending Checkouts</h5>
+                            <p class="mb-0">Total pending checkouts currently in the system.</p>
+                        </div>
+                        <div>
+                            <h2 class="text-info mb-0">@ViewData["TotalPending"]</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-success shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-success mb-0">Returned Checkouts</h5>
+                            <p class="mb-0">Total checkouts that have been returned.</p>
+                        </div>
+                        <div>
+                            <h2 class="text-success mb-0">@ViewData["TotalReturned"]</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-danger shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-danger mb-0">Overdue Checkouts</h5>
+                            <p class="mb-0">Total overdue checkouts that require attention.</p>
+                        </div>
+                        <div>
+                            <h2 class="text-danger mb-0">@ViewData["TotalOverdue"]</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <table class="table">
         <thead>
             <tr>
@@ -61,22 +116,32 @@ else
                 <th>Book Name</th>
                 <th>Book Copy ID</th>
                 <th>Due Date</th>
-                <th>Status</th> 
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Items)
             {
+                bool isUnclickable = item.Status == Application.Enums.CheckoutStatus.Returned;
+
                 <tr>
                     <td>@item.UserName</td>
                     <td>@item.BookName</td>
                     <td>@item.BookCopyID</td>
                     <td>@item.DueDate.ToShortDateString()</td>
-                    <td>@item.Status</td> 
+                    <td>@item.Status</td>
                     <td>
-                        <a href="@Url.Action("Edit", "Checkout", new { id = item.Id })" class="btn btn-primary">Edit</a>
-                        <a href="@Url.Action("Delete", "Checkout", new { id = item.Id })" class="btn btn-danger">Delete</a>
+                        <a href="@Url.Action("Edit", "Checkout", new { id = item.Id })"
+                           class="btn btn-primary @(isUnclickable ? "unclickable" : "")"
+                        @(isUnclickable ? "onclick='return false;'" : "")>
+                            Edit
+                        </a>
+                        <a href="@Url.Action("Delete", "Checkout", new { id = item.Id })"
+                           class="btn btn-danger @(isUnclickable ? "unclickable" : "")"
+                        @(isUnclickable ? "onclick='return false;'" : "")>
+                            Delete
+                        </a>
                     </td>
                 </tr>
             }
@@ -92,7 +157,7 @@ else
                         searchUser = ViewData["searchUser"],
                         searchDate = ViewData["searchDate"],
                         searchBook = ViewData["searchBook"],
-                        searchStatus = ViewData["SearchStatus"], 
+                        searchStatus = ViewData["SearchStatus"],
                         pageNumber = Model.CurrentPage - 1,
                         pageSize = ViewData["pageSize"]
                     })">Previous</a>
@@ -106,7 +171,7 @@ else
                         searchUser = ViewData["searchUser"],
                         searchDate = ViewData["searchDate"],
                         searchBook = ViewData["searchBook"],
-                        searchStatus = ViewData["SearchStatus"], 
+                        searchStatus = ViewData["SearchStatus"],
                         pageNumber = i,
                         pageSize = ViewData["pageSize"]
                     })">@i</a>
@@ -121,6 +186,7 @@ else
                         searchDate = ViewData["searchDate"],
                         searchBook = ViewData["searchBook"],
                         searchStatus = ViewData["SearchStatus"],
+                        pageNumber = Model.CurrentPage + 1,
                         pageSize = ViewData["pageSize"]
                     })">Next</a>
                 </li>
@@ -128,4 +194,3 @@ else
         </ul>
     </div>
 }
-

@@ -2,20 +2,25 @@
 using Application.Interfaces;
 using Application.Models;
 using Application.ViewModels.Checkout;
+using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace LibraryManagementSystem.Controllers
 {
     public class CheckoutController : Controller
     {
         private readonly ICheckoutRepository _checkoutRepository;
+        private readonly LibraryDbContext _libraryDbContext;
 
-        public CheckoutController(ICheckoutRepository checkoutRepository)
+
+        public CheckoutController(ICheckoutRepository checkoutRepository , LibraryDbContext libraryDbContext)
         {
             _checkoutRepository = checkoutRepository;
+            _libraryDbContext = libraryDbContext;
+
         }
 
         public async Task<IActionResult> Create()
@@ -136,17 +141,27 @@ namespace LibraryManagementSystem.Controllers
                 ViewBag.Message = "No checkouts found for the specified Search criteria you provide";
             }
 
+            // Calculate the numbers
+            var totalPending = await _libraryDbContext.Checkouts
+                .CountAsync(c => c.Status == CheckoutStatus.Pending);
+            var totalOverdue = await _libraryDbContext.Checkouts
+                .CountAsync(c => c.Status == CheckoutStatus.Overdue);
+            var totalReturned = await _libraryDbContext.Checkouts
+                .CountAsync(c => c.Status == CheckoutStatus.Returned);
+
             ViewData["searchUser"] = searchUser;
             ViewData["searchDate"] = searchDate;
             ViewData["searchBook"] = searchBook;
             ViewData["pageNumber"] = pageNumber;
             ViewData["pageSize"] = pageSize;
             ViewData["SearchStatus"] = SearchStatus;
+            ViewData["TotalPending"] = totalPending;
+            ViewData["TotalOverdue"] = totalOverdue;
+            ViewData["TotalReturned"] = totalReturned;
 
             return View(result);
         }
 
-        // GET: Checkouts/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var checkout = await _checkoutRepository.GetCheckoutByIdAsync(id); 
