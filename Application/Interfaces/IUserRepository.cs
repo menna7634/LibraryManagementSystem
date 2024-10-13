@@ -2,6 +2,7 @@
 using Application.Helpers;
 using Application.Models;
 using Application.ViewModels;
+using Application.ViewModels.Member;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Interfaces
@@ -14,5 +15,9 @@ namespace Application.Interfaces
         Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user);
 
         Task SignOutAsync();
+        Task<PaginatedResult<UserVM>> GetUsersPaginatedAsync(int pageNumber, int pageSize);
+        Task<PaginatedResult<UserVM>> SearchUsersAsync(string searchUser, string searchEmail, DateTime? searchJoinedAt, string orderBy, int pageNumber, int pageSize);
+        Task<ApplicationUser> GetUserByIdAsync(string userId);
+        Task<int> GetTotalUsersAsync();
     }
 }
