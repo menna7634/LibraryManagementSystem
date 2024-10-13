@@ -1,57 +1,94 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="~/css/AdminDashboard.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <title>Modern Admin Dashboard</title>
+    <link rel="stylesheet" href="~/css//AdminDashboard.css">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="main-content">
-            <header class="dashboard-header">
-                <h1>Library Management System</h1>
-                <div class="user-info">
-                    <p>Welcome, Admin</p>
-                </div>
-            </header>
-            <div class="dashboard-metrics">
-                <div class="metric-box">
-                    <h3>No of Books</h3>
-                    <p id="bookCount">Loading...</p>
-                </div>
-                <div class="metric-box">
-                    <h3>No of Members</h3>
-                    <p>10</p>
-                </div>
-                <div class="metric-box">
-                    <h3>Issued Books</h3>
-                    <p>10</p>
-                </div>
-                <div class="metric-box">
-                    <h3>Defaulter List</h3>
-                    <p>10</p>
-                </div>
+
+
+
+    <input type="checkbox" id="menu-toggle">
+    <div class="sidebar">
+        <div class="side-content">
+            <div class="profile">
+                <div class="profile-img bg-img" style="background-image: url('@Url.Content("~/Images/User/user (2).png")')"></div>
+                <h4>Welcome Librarian</h4>
+            </div>
+
+            <div class="side-menu">
+                <ul>
+                    <li>
+                        <a href="#" class="active">
+                            <span class="las la-home"></span>
+                            <small>Dashboard</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Book")">
+                            <span class="las la-book"></span>
+                            <small>
+                                Manage Books
+                            </small>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="las la-users"></span>
+                            <small>
+                               Manage Members
+                            </small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="las la-book-open"></span>
+                            <small>Issue Book</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="las la-undo"></span>
+                            <small>Return Books</small>
+                        </a>
+                    </li>
+
+     
+                    <li>
+                        <a href="#">
+                            <span class="las la-envelope"></span>
+                            <small>Contacts</small>
+                        </a>
+                    </li>
+                 
+
+
+                </ul>
             </div>
         </div>
-        <nav class="sidebar">
-            <ul>
-                <li><a href="#">Home Page</a></li>
-                <li><a href="@Url.Action("Index", "Book")">Manage Books</a></li>
-                <li><a href="">Manage Members</a></li>
-                <li><a href="#">Issue Book</a></li>
-                <li><a href="#">Return Book</a></li>
-                <li><a href="#">View Records</a></li>
-                <li><a href="#">View Issued Books</a></li>
-                <li><a href="#">Defaulter List</a></li>
-                <li><a href="#">Contacts</a></li>
-                <li><a href="#">Logout</a></li>
-            </ul>
-        </nav>
-       
     </div>
-    
-</body>
 
+    <div class="main-content">
+
+        <header>
+            <div class="header-content">
+                <label for="menu-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+
+                    <div class="user">
+                        <span class="las la-power-off"></span>
+                        <span><a href="home.html">Log out</a></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+
+=</body>
 </html>
