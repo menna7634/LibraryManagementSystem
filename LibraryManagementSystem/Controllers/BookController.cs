@@ -6,6 +6,7 @@ using Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Application.ViewModels.Publisher;
 using Infrastructure.Repositories;
+using System.Drawing.Printing;
 namespace LibraryManagementSystem.Controllers
 {
     public class BookController : Controller
@@ -17,9 +18,19 @@ namespace LibraryManagementSystem.Controllers
             _bookRepository = bookRepository;
             _libraryDbContext = libraryDbContext;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchTitle,string? searchGenre, string? searchAuthor, string? searchStatus, int pageNumber = 1, int pageSize = 10)
         {
-            var books= await _bookRepository.GetAllBooksAsync();
+            var books = await _bookRepository.GetAllBooksAsync(searchTitle, searchGenre, searchAuthor, searchStatus, pageNumber, pageSize);
+            if (!books.Items.Any())
+            {
+                ViewBag.Message = "No Books found for the specified Search criteria you provide";
+            }
+            ViewData["searchTitle"] = searchTitle;
+            ViewData["searchGenre"] = searchGenre;
+            ViewData["searchAuthor"] = searchAuthor;
+            ViewData["searchStatus"] = searchStatus;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["pageSize"] = pageSize;
             return View(books);
         }
         [HttpGet]
@@ -111,12 +122,12 @@ namespace LibraryManagementSystem.Controllers
             return RedirectToAction("Index");
         }
 
-
-
-
-
-
-
+        public async Task<IActionResult> GetNumberOfBooks()
+        {
+            var bookCount = await _bookRepository.GetBookCountAsync();
+            return Json(bookCount);
+        }
+       
 
 
     }
