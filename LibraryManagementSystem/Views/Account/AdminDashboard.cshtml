@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,7 +19,7 @@
             <div class="dashboard-metrics">
                 <div class="metric-box">
                     <h3>No of Books</h3>
-                    <p>10</p>
+                    <p id="bookCount">Loading...</p>
                 </div>
                 <div class="metric-box">
                     <h3>No of Members</h3>
@@ -37,8 +38,8 @@
         <nav class="sidebar">
             <ul>
                 <li><a href="#">Home Page</a></li>
-                <li><a href="#">Manage Books</a></li>
-                <li><a href="#">Manage Members</a></li>
+                <li><a href="@Url.Action("Index", "Book")">Manage Books</a></li>
+                <li><a href="">Manage Members</a></li>
                 <li><a href="#">Issue Book</a></li>
                 <li><a href="#">Return Book</a></li>
                 <li><a href="#">View Records</a></li>
@@ -50,5 +51,7 @@
         </nav>
        
     </div>
+    
 </body>
+
 </html>

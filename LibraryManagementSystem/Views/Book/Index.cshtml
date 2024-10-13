@@ -1,9 +1,10 @@
-﻿@model IEnumerable<Application.ViewModels.Book.ViewBookVM>
+﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.Book.ViewBookVM>
+
 
 @{
-    ViewData["Title"] = "Books";
+    ViewData["Title"] = "Index";
 }
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
@@ -11,21 +12,165 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orders</title>
     <link rel="stylesheet" href="~/css/book.css">
-    <link rel="stylesheet" href="~/css/booklist.css">
+     <link rel="stylesheet" href="~/css/AdminDashboard.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/LibraryManagementSystem.styles.css" asp-append-version="true" />
     <!-- ====== ionicons ======= -->
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        /* Sidebar styling */
+        .sidebar {
+            width: 220px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #333;
+            padding-top: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #575757;
+        }
+
+        /* Content area adjustments */
+        .main-content {
+            margin-left: 240px; /* Offset for sidebar */
+            padding: 20px;
+        }
+
+        .form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .btn-container {
+            display: flex; /* Enables flexbox layout */
+            gap: 10px; /* Adds space between the buttons */
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px; /* Optional for spacing */
+        }
+
+    </style>
+    <style>
+        .unclickable {
+            pointer-events: none; /* Disable pointer events */
+            opacity: 0.6; /* Make the button look faded */
+            cursor: default; /* Change the cursor to indicate it's not clickable */
+        }
+    </style>
+
 </head>
 
 <body>
-    <div class="details">
-        <div class="recentOrders">
-            <div class="cardHeader">
+    <!-- Sidebar navigation -->
+    <nav class="sidebar">
+        <ul>
+            <li><a href="#">Home Page</a></li>
+            <li><a href="@Url.Action("Index", "Book")">Manage Books</a></li>
+            <li><a href="#">Manage Members</a></li>
+            <li><a href="#">Issue Book</a></li>
+            <li><a href="#">Return Book</a></li>
+            <li><a href="#">View Records</a></li>
+            <li><a href="#">View Issued Books</a></li>
+            <li><a href="#">Defaulter List</a></li>
+            <li><a href="#">Contacts</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="search-form bg-light p-3 rounded shadow-sm mb-4">
+        <form method="get" asp-action="Index" class="row g-3">
+            <div class="col-md-3">
+                <label for="searchTitle">Search by Title</label>
+                <input type="text"
+                       name="searchTitle"
+                       class="form-control"
+                       placeholder="Search by Title"
+                       value="@ViewData["searchTitle"]" />
+            </div>
+            <div class="col-md-3">
+                <label for="searchGenre">Search by Genre</label>
+                <input type="text"
+                       name="searchGenre"
+                       class="form-control"
+                       placeholder="Search by Genre"
+                       value="@ViewData["searchGenre"]" />
+            </div>
+            <div class="col-md-3">
+                <label for="searchAuthor">Search by Author</label>
+                <input type="text"
+                       name="searchAuthor"
+                       class="form-control"
+                       placeholder="Search by Author"
+                       value="@ViewData["searchAuthor"]" />
+            </div>
+         
+            <div class="col-md-3">
+                <label for="searchStatus">Search by Status</label>
+                
+                <select name="searchStatus" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="true"  selected="@(ViewData["searchStatus"]?.ToString() == "true")">Available</option>
+                    <option value="false" selected="@(ViewData["searchStatus"]?.ToString() == "false")">Unavailable</option>
+
+                </select>
+            </div>
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}
+else
+{
+
+        <div class="row">
+            <div class="col-md-6">
                 <h2>All Books</h2>
             </div>
-    <table class="table table-bordered table-striped">
+            <div class="col-md-6 text-right">
+                <a asp-controller="Book" asp-action="Add">
+                    <button class="btn btn-primary" type="button" style="background-color:#333">Add New Book</button>
+                </a>
+            </div>
+        </div>
+    <table class="table">
         <thead>
             <tr>
                 <th>ISBN</th>
@@ -34,13 +179,13 @@
                 <th>Description</th>
                 <th>Genres</th>
                 <th>Publisher</th>
-                <th>Date</th>
+                <th>Added Date</th>
                 <th>View Copies</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var book in Model)
+            @foreach (var book in Model.Items)
             {
                 <tr>
                     <td>@book.ISBN</td>
@@ -68,12 +213,12 @@
 
                         @if (book.BookCopies != null && book.BookCopies.Any())
                         {
-                            <ul>
+                            <ol>
                                 @foreach (var copy in book.BookCopies)
                                 {
-                                    <li>@copy.Location - Available: @(copy.Available ? "Yes" : "No")</li>
-                                }
-                            </ul>
+                                     <li>@copy.Location <br/> Available: @(copy.Available ? "Yes" : "No")</li>
+                                 }
+                            </ol>
                         }
                         else
                         {
@@ -81,18 +226,62 @@
                         }
                     </td>
                     <td>
+                        <a asp-controller="BookCopy" asp-action="Create" asp-route-id="@book.Id" class="btn btn-primary" style="background-color:cadetblue"> Add Copy</a>
                         <a asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-primary">Edit</a>
                         <a asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
-                       
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    <div class="pagination">
+        <ul class="pagination">
+            @if (Model.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        searchTitle = ViewData["searchTitle"],
+                        searchGenre = ViewData["searchGenre"],
+                        searchAuthor = ViewData["searchAuthor"],
+                        searchStatus = ViewData["searchStatus"],
+                        pageNumber = Model.CurrentPage - 1,
+                        pageSize = ViewData["pageSize"]
+                    })">Previous</a>
+                </li>
+            }
 
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        searchTitle = ViewData["searchTitle"],
+                        searchGenre = ViewData["searchGenre"],
+                        searchAuthor = ViewData["searchAuthor"],
+                        searchStatus = ViewData["searchStatus"],
+                        pageNumber = i,
+                        pageSize = ViewData["pageSize"]
+                    })">@i</a>
+                </li>
+            }
+
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        searchTitle = ViewData["searchTitle"],
+                        searchGenre = ViewData["searchGenre"],
+                        searchAuthor = ViewData["searchAuthor"],
+                        searchStatus = ViewData["searchStatus"],
+                        pageNumber = Model.CurrentPage + 1,
+                        pageSize = ViewData["pageSize"]
+                    })">Next</a>
+                </li>
+            }
+        </ul>
+    </div>
+    
+}
     <script src="~/js/script.js"></script>
-</div>
-</div>
 
 </body>
 </html>

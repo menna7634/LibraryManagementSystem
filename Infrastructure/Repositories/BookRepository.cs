@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Helpers;
+using Application.Interfaces;
 using Application.Models;
 using Application.ViewModels.Book;
 using Application.ViewModels.Publisher;
@@ -15,34 +16,77 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class BookRepository : GenericRepository<Book>, IBookRepository 
+    public class BookRepository : GenericRepository<Book>, IBookRepository
     {
         private readonly LibraryDbContext _libraryDbContext;
-        public BookRepository(LibraryDbContext context ):base(context)
+        public BookRepository(LibraryDbContext context) : base(context)
         {
             _libraryDbContext = context;
         }
+
+
+        #region Book Operations
         public async Task<Book?> GetBookById(int Id)
         {
-            var book= await _libraryDbContext.Books
+            var book = await _libraryDbContext.Books
             .Include(b => b.Genres) // Include genres
             .FirstOrDefaultAsync(b => b.Id == Id);
-            //var book = await GetByIdAsync(Id);
             return book;
         }
-
-        public async Task<IEnumerable<ViewBookVM>> GetAllBooksAsync()
+        public async Task<bool> IsBookAvailableAsync(int bookId)
         {
-            var books = await _libraryDbContext.Books
-                .Include(b => b.Genres)
-                .Include(b => b.Publisher) 
-                .Include(b=>b.BookCopies)
-                .ToListAsync();
-            //var books= await GetAllAsync();
-            List<ViewBookVM> booksVM=new List<ViewBookVM>();
-            foreach(var book in books)
+            var book = await _libraryDbContext.Books
+                .Include(b => b.BookCopies)
+                .FirstOrDefaultAsync(b => b.Id == bookId);
+            if (book == null)
             {
-                int id=book.PublisherId;
+                return false;
+            }
+            return book.BookCopies.Any(bc => bc.Available);
+        }
+
+
+        public async Task<PaginatedResult<ViewBookVM>> GetAllBooksAsync(string searchTitle, string searchGenre, string searchAuthor, string searchStatus, int pageNumber, int pageSize)
+        {
+
+            var books = _libraryDbContext.Books
+                .AsNoTracking()
+                .Include(b => b.Genres)
+                .Include(b => b.Publisher)
+                .Include(b => b.BookCopies)
+                .AsQueryable();
+            //implement search
+            if (!string.IsNullOrEmpty(searchStatus))
+            {
+                Console.WriteLine($"searchStatus value: {searchStatus}");  // Debug output
+
+                if (searchStatus == "true")
+                {
+                    books = books.Where(b => b.BookCopies.Any(bc => bc.Available == true));
+                }
+                else if (searchStatus == "false")
+                {
+                    books = books.Where(b => b.BookCopies.Any(bc => bc.Available == false));
+                }
+            }
+            if (!string.IsNullOrEmpty(searchTitle))
+            {
+                books = books.Where(b => b.Name.Contains(searchTitle));
+            }
+            if (!string.IsNullOrEmpty(searchAuthor))
+            {
+                books = books.Where(b => b.Author.Contains(searchAuthor));
+            }
+            if (!string.IsNullOrEmpty(searchGenre))
+            {
+                books = books.Where(b => b.Genres.Any(g => g.Name.Contains(searchGenre)));
+            }
+
+
+            List<ViewBookVM> booksVM = new List<ViewBookVM>();
+            foreach (var book in books)
+            {
+                int id = book.PublisherId;
                 var Pub = _libraryDbContext.Publishers.FirstOrDefault(b => b.Id == id);
                 var bc = book.BookCopies
                         .Select(b => new ViewBookCopy
@@ -53,7 +97,7 @@ namespace Infrastructure.Repositories
                 var ge = book.Genres.Select(g => g.Name).ToList();
                 var model = new ViewBookVM
                 {
-                    Id= book.Id,
+                    Id = book.Id,
                     ISBN = book.ISBN,
                     Name = book.Name,
                     Author = book.Author,
@@ -68,19 +112,35 @@ namespace Infrastructure.Repositories
                 };
                 booksVM.Add(model);
             }
-            return booksVM;
+            //add pagination
+            var totalItems = booksVM.Count;
+            var items = booksVM
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            return new PaginatedResult<ViewBookVM>
+            {
+                Items = items,
+                CurrentPage = pageNumber,
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
         }
+
 
         public async Task AddBookAsync(AddBookVM bookVM)
         {
-            var book=new Book{
-                Name= bookVM.Name,
-                Author=bookVM.Author,
-                Date=DateTime.UtcNow,
-                Description=bookVM.Description,
-                ISBN=bookVM.ISBN,
-                Number=bookVM.Number,
-                PublisherId=bookVM.PublisherId,
+            var book = new Book
+            {
+                Name = bookVM.Name,
+                Author = bookVM.Author,
+                Date = DateTime.UtcNow,
+                Description = bookVM.Description,
+                ISBN = bookVM.ISBN,
+                Number = bookVM.Number,
+                PublisherId = bookVM.PublisherId,
                 //price
             };
             // Add genres
@@ -97,7 +157,7 @@ namespace Infrastructure.Repositories
 
         public async Task UpdateBookAsync(int id, AddBookVM bookVM)
         {
-            var book=await GetBookById(id);
+            var book = await GetBookById(id);
 
             book.ISBN = bookVM.ISBN;
             book.Name = bookVM.Name;
@@ -105,7 +165,7 @@ namespace Infrastructure.Repositories
             book.Description = bookVM.Description;
             book.PublisherId = bookVM.PublisherId;
             book.Number = bookVM.Number;
-   
+
             // Update genres
             if (bookVM.GenreIds != null)
             {
@@ -135,9 +195,9 @@ namespace Infrastructure.Repositories
                     }
 
                 }
-                
+
             }
-            
+
             await UpdateAsync(book);
 
         }
@@ -147,6 +207,44 @@ namespace Infrastructure.Repositories
             await DeleteAsync(Id);
         }
 
+        public async Task<int> GetBookCountAsync()
+        {
+            return await _libraryDbContext.Books.CountAsync();
+        }
+
+
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
-     
 }
