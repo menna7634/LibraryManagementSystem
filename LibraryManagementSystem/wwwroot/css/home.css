@@ -20,6 +20,8 @@
     height: auto;
     width: 400px;
     border-radius: 12px;
+    float: left; 
+    margin-right: 50px; 
 }
 
 .about {

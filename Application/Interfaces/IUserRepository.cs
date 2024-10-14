@@ -10,14 +10,11 @@ namespace Application.Interfaces
     public interface IUserRepository
     {
         Task<IdentityResult> RegisterAsync(RegisterViewModel model);
-        Task<ApplicationUser> FindByEmailAsync(string email);
         Task<SignInResponse> SignInAsync(LoginViewModel model);
         Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user);
 
         Task SignOutAsync();
-        Task<PaginatedResult<UserVM>> GetUsersPaginatedAsync(int pageNumber, int pageSize);
         Task<PaginatedResult<UserVM>> SearchUsersAsync(string searchUser, string searchEmail, DateTime? searchJoinedAt, string orderBy, int pageNumber, int pageSize);
         Task<ApplicationUser> GetUserByIdAsync(string userId);
-        Task<int> GetTotalUsersAsync();
     }
 }

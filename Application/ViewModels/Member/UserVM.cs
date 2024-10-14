@@ -16,6 +16,8 @@ namespace Application.ViewModels.Member
         public Gender Gender { get; set; }
         public required string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
+
+        public string PhoneNumber { get; set; }
     }
 
 }

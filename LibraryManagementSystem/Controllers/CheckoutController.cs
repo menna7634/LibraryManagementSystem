@@ -141,7 +141,6 @@ namespace LibraryManagementSystem.Controllers
                 ViewBag.Message = "No checkouts found for the specified Search criteria you provide";
             }
 
-            // Calculate the numbers
             var totalPending = await _libraryDbContext.Checkouts
                 .CountAsync(c => c.Status == CheckoutStatus.Pending);
             var totalOverdue = await _libraryDbContext.Checkouts

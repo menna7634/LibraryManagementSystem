@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.ViewModels.Member;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystem.Controllers
@@ -13,25 +14,24 @@ namespace LibraryManagementSystem.Controllers
             _userRepository = userRepository;
         }
 
-        // GET: MemberMangement
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
-        {
-            
-           var result = await _userRepository.GetUsersPaginatedAsync(pageNumber, pageSize);
-
-            ViewData["searchUser"] = string.Empty; 
-            ViewData["searchEmail"] = string.Empty; 
-            ViewData["searchJoinedAt"] = null; 
-            ViewData["TotalUsers"] = result.TotalCount; 
-
-            return View("GetMembers",result); 
-        }
 
         // GET: MemberMangement/Search
         [HttpGet]
         public async Task<IActionResult> Search(string searchUser, string searchEmail, DateTime? searchJoinedAt, string orderBy = "UserName", int pageNumber = 1, int pageSize = 10)
         {
             var result = await _userRepository.SearchUsersAsync(searchUser, searchEmail, searchJoinedAt, orderBy, pageNumber, pageSize);
+            if (!result.Items.Any())
+            {
+                ViewBag.Message = "No Users found for the specified Search criteria you provide";
+            }
+
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["pageSize"] = pageSize;
+            ViewData["searchUser"] = searchUser;
+            ViewData["searchEmail"] = searchEmail;
+            ViewData["searchJoinedAt"] = searchJoinedAt;
+            ViewData["TotalUsers"] = result.TotalCount;
+
             return View("GetMembers", result); 
         }
 

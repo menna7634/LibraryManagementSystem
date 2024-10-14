@@ -75,12 +75,6 @@ namespace Infrastructure.Repositories
             return result;
         }
 
-
-
-        public async Task<ApplicationUser> FindByEmailAsync(string email)
-        {
-            return await _userManager.FindByEmailAsync(email);
-        }
         public async Task<SignInResponse> SignInAsync(LoginViewModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -124,65 +118,17 @@ namespace Infrastructure.Repositories
             await _signInManager.SignOutAsync();
         }
 
-        public async Task<PaginatedResult<UserVM>> GetUsersPaginatedAsync(int pageNumber, int pageSize)
-        {
-            // Get the "User" RoleId
-            var userRoleId = await _dbContext.Roles
-                .Where(r => r.Name == "User")  // Fetching the role ID for "User"
-                .Select(r => r.Id)
-                .FirstOrDefaultAsync();
-
-            // Query to get users who have the "User" role only
-            var query = from user in _dbContext.Users
-                        join userRole in _dbContext.UserRoles on user.Id equals userRole.UserId
-                        where userRole.RoleId == userRoleId  // Only users with the "User" role
-                        select new UserVM
-                        {
-                            Id = user.Id,
-                            UserName = user.UserName,
-                            Email = user.Email,
-                            JoinedAt = user.JoinedAT,
-                            Gender = user.Gender,
-                            Address = user.Address,
-                            DateOfBirth = user.DateOfBirth
-                        };
-
-            var totalCount = await query.CountAsync(); // Get total count of "User" role users
-
-            // Pagination logic
-            var users = await query
-                .OrderBy(u => u.UserName)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-            // Return paginated result
-            return new PaginatedResult<UserVM>
-            {
-                Items = users,
-                CurrentPage = pageNumber,
-                TotalPages = totalPages,
-                TotalItems = totalCount
-            };
-        }
-
-
-        // Search users by username, email, joined date
-
+  
         public async Task<PaginatedResult<UserVM>> SearchUsersAsync(string searchUser, string searchEmail, DateTime? searchJoinedAt, string orderBy, int pageNumber, int pageSize)
         {
-            // Get the "User" RoleId
             var userRoleId = await _dbContext.Roles
-                .Where(r => r.Name == "User")  // Fetching the role ID for "User"
+                .Where(r => r.Name == "Member")  
                 .Select(r => r.Id)
                 .FirstOrDefaultAsync();
 
-            // Query to get users with "User" role and apply search filters
             var query = from user in _dbContext.Users
                         join userRole in _dbContext.UserRoles on user.Id equals userRole.UserId
-                        where userRole.RoleId == userRoleId  // Only users with the "User" role
+                        where userRole.RoleId == userRoleId 
                         select user;
 
             // Apply search filters
@@ -201,10 +147,10 @@ namespace Infrastructure.Repositories
                 query = query.Where(u => u.JoinedAT.Date == searchJoinedAt.Value.Date);
             }
 
-            var totalItems = await query.CountAsync(); // Get total count after filters
+            var totalItems = await query.CountAsync(); 
 
             var users = await query
-                .OrderBy(j => j.JoinedAT)  // Modify ordering as needed
+                .OrderBy(j => j.JoinedAT)  
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Select(u => new UserVM
@@ -215,11 +161,21 @@ namespace Infrastructure.Repositories
                     JoinedAt = u.JoinedAT,
                     Gender = u.Gender,
                     Address = u.Address,
-                    DateOfBirth = u.DateOfBirth
+                    DateOfBirth = u.DateOfBirth,
+                    PhoneNumber=u.PhoneNumber
                 })
                 .ToListAsync();
 
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+
+            var memberCount = await _userManager.Users
+      .Join(_dbContext.UserRoles,
+            user => user.Id,
+            userRole => userRole.UserId,
+            (user, userRole) => new { user, userRole })
+      .Where(x => x.userRole.RoleId == userRoleId)
+      .CountAsync();
 
             // Return the paginated result
             return new PaginatedResult<UserVM>
@@ -227,7 +183,8 @@ namespace Infrastructure.Repositories
                 Items = users,
                 CurrentPage = pageNumber,
                 TotalPages = totalPages,
-                TotalItems = totalItems
+                TotalItems = totalItems,
+                TotalCount = memberCount
             };
         }
 
@@ -239,11 +196,6 @@ namespace Infrastructure.Repositories
                    .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-
-        public async Task<int> GetTotalUsersAsync()
-        {
-            return await _dbContext.Users.CountAsync();
-        }
 
     }
 }
