@@ -30,6 +30,7 @@ namespace LibraryManagementSystem.Controllers
 		{
 			if (ModelState.IsValid)
 			{
+				contactForm.Submittedat = DateTime.Now;
 				await _context.ContactForms.AddAsync(contactForm);
 				await _context.SaveChangesAsync();
 				ViewBag.Message = "Your message has been sent successfully.";

@@ -20,5 +20,7 @@ namespace Application.Models
 		[Required]
 
 		public required string Message { get; set; }
+
+		public DateTime Submittedat { get; set; }
 	}
 }
