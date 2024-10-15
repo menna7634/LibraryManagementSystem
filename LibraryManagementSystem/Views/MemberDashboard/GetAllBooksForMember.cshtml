@@ -1,0 +1,342 @@
+﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.MemberDashboard.GetAllBooksForMemberVM>
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <link rel="stylesheet" href="~/css/AdminDashboard.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/LibraryManagementSystem.styles.css" asp-append-version="true" />
+    <!-- ====== ionicons ======= -->
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+
+@*     <link rel="stylesheet" href="~/css/book.css">
+
+
+ *@
+    <style>
+
+
+        /* Content area adjustments */
+        .main-content {
+            margin-left: 240px; /* Offset for sidebar */
+            padding: 20px;
+        }
+
+        .form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .btn-container {
+            display: flex; /* Enables flexbox layout */
+            gap: 10px; /* Adds space between the buttons */
+        }
+
+        .center-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px; /* Optional for spacing */
+        }
+
+    </style>
+    <style>
+        .unclickable {
+            pointer-events: none; /* Disable pointer events */
+            opacity: 0.6; /* Make the button look faded */
+            cursor: default; /* Change the cursor to indicate it's not clickable */
+        }
+    </style>
+    <style>
+        /* Default style for the heart button */
+        .wishlist-btn {
+            background-color: white; /* White background */
+            padding: 10px; /* Padding to make it look like a button */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+        }
+
+        .wishlist-icon {
+            font-size: 24px; /* Adjust icon size */
+            color: black; /* Icon color */
+            transition: color 0.3s ease; /* Smooth color transition */
+        }
+
+        /* Hover effect: change background and icon */
+        .wishlist-btn:hover {
+            background-color: black; /* Change background to black */
+        }
+
+            .wishlist-btn:hover .wishlist-icon {
+                color: white; /* Change icon color to white when hovered */
+            }
+
+        /* Active/fill state when clicked */
+        .active {
+            background-color: black; /* Filled background */
+        }
+
+            .active .wishlist-icon {
+                color: white; /* Change icon color to white */
+            }
+    </style>
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+    @* sidebar *@
+
+
+    <input type="checkbox" id="menu-toggle">
+    <div class="sidebar">
+        <div class="side-content">
+            <div class="profile">
+                <div class="profile-img bg-img" style="background-image: url('@Url.Content("~/Images/User/user (2).png")')"></div>
+                <h4>Welcome Member</h4>
+            </div>
+
+            <div class="side-menu">
+                <ul>
+                    <li>
+                        <a href="#">
+                            <span class="las la-user-alt"></span>
+                            <small>Profile</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="las la-history"></span>
+                            <small>History</small>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            <span class="las la-exclamation-circle"></span>
+                            <small>Penalties</small>
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a href="@Url.Action("Index", "MemberDashboard")">
+                            <span class="las la-book-open"></span>
+                            <small>Books</small>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <header>
+            <div class="header-content">
+                <label for="menu-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+
+                <div class="user">
+                    <span class="las la-power-off"></span>
+                    <span><a href="home.html">Log out</a></span>
+                </div>
+            </div>
+    </div>
+    </header>
+
+
+
+
+
+    <div class="search-form bg-light p-3 rounded shadow-sm mb-4" style="margin-top:3%">  
+        <form method="get" asp-action="Index" class="row g-3">
+            <div class="col-md-3">
+                <label for="searchTitle">Search by Title</label>
+                <input type="text"
+                       name="searchTitle"
+                       class="form-control"
+                       placeholder="Search by Title"
+                       value="@ViewData["searchTitle"]" />
+            </div>
+            <div class="col-md-3">
+                <label for="searchGenre">Search by Genre</label>
+                <input type="text"
+                       name="searchGenre"
+                       class="form-control"
+                       placeholder="Search by Genre"
+                       value="@ViewData["searchGenre"]" />
+            </div>
+            <div class="col-md-3">
+                <label for="searchAuthor">Search by Author</label>
+                <input type="text"
+                       name="searchAuthor"
+                       class="form-control"
+                       placeholder="Search by Author"
+                       value="@ViewData["searchAuthor"]" />
+            </div>
+
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info">
+            @ViewBag.Message
+        </div>
+    }
+    else
+    {
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>All Books</h2>
+            </div>
+            
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Description</th>
+                    <th>Genres</th>
+                    <th>Publisher</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model.Items)
+                {
+                    <tr>
+                        <td>@book.ISBN</td>
+                        <td>@book.Name</td>
+                        <td>@book.Author</td>
+                        <td>@book.Description</td>
+                        <td>
+                            @if (book.Genres != null && book.Genres.Any())
+                            {
+                                <ul>
+                                    @foreach (var genre in book.Genres)
+                                    {
+                                        <li>@genre</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span>No Genres</span>
+                            }
+                        </td>
+                        <td>@book.PublisherName</td>
+                        <td>
+                            <a asp-controller="BookCopy" asp-action="Create" asp-route-id="@book.Id" class="wishlist-btn btn">
+                                <ion-icon name="heart-outline" class="wishlist-icon"></ion-icon>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="pagination">
+            <ul class="pagination">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new {
+                        searchTitle = ViewData["searchTitle"],
+                        searchGenre = ViewData["searchGenre"],
+                        searchAuthor = ViewData["searchAuthor"],
+                        pageNumber = Model.CurrentPage - 1,
+                        pageSize = ViewData["pageSize"]
+                    })">Previous</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new {
+                        searchTitle = ViewData["searchTitle"],
+                        searchGenre = ViewData["searchGenre"],
+                        searchAuthor = ViewData["searchAuthor"],
+                        pageNumber = i,
+                        pageSize = ViewData["pageSize"]
+                    })">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new {
+                        searchTitle = ViewData["searchTitle"],
+                        searchGenre = ViewData["searchGenre"],
+                        searchAuthor = ViewData["searchAuthor"],
+                        pageNumber = Model.CurrentPage + 1,
+                        pageSize = ViewData["pageSize"]
+                    })">Next</a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+    }
+    <script src="~/js/script.js"></script>
+
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const wishlistBtn = document.querySelector('.wishlist-btn');
+        const wishlistIcon = wishlistBtn.querySelector('.wishlist-icon');
+
+        wishlistBtn.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            // Toggle the 'active' class to switch between fill and outline
+            wishlistBtn.classList.toggle('active');
+
+            // Toggle between 'heart-outline' and 'heart'
+            if (wishlistIcon.getAttribute('name') === 'heart-outline') {
+                wishlistIcon.setAttribute('name', 'heart');
+            } else {
+                wishlistIcon.setAttribute('name', 'heart-outline');
+            }
+        });
+    });
+</script>
+
+
+</html>
