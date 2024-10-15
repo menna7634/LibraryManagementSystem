@@ -1,16 +1,16 @@
-﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.MemberDashboard.UserPenaltiesVM> 
+﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.MemberDashboard.UserPenaltiesVM>
 
 @{
     ViewData["Title"] = "User Penalties";
 }
 
-<h2>User Penalties</h2>
+<h2>Penalties</h2>
 
 <div class="container mt-4">
     <form method="get" class="mb-3">
         <div class="row">
             <div class="col-md-4">
-                <label for="isPaidFilter" class="form-label">Filter by Payment Status</label>
+                <label for="isPaidFilter" class="form-label">Payment Status</label>
                 <select name="isPaid" id="isPaidFilter" class="form-control">
                     <option value="">All</option>
                     <option value="true" selected="@(Model.Items.FirstOrDefault()?.IsPaid == true ? "selected" : "")">Paid</option>
@@ -42,7 +42,7 @@
                 {
                     <tr>
                         <td>@penalty.Type</td>
-                        <td>@penalty.Amount.ToString("C")</td>
+                        <td>@penalty.Amount.ToString() Egy</td>
                         <td>@penalty.IssuedDate.ToString("yyyy-MM-dd")</td>
                         <td>@(penalty.IsPaid ? "Yes" : "No")</td>
                         <td>@penalty.CheckoutId</td>

@@ -197,13 +197,16 @@ namespace Infrastructure.Repositories
                    .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-        public string? GetCurrentUserId(HttpContext httpContext)
+        public string GetCurrentUserId(HttpContext httpContext)
         {
-            if (!httpContext.User.Identity.IsAuthenticated)
-                return null;
-            var claim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-            return claim?.Value;
+            if (httpContext.User?.Identity?.IsAuthenticated == true)
+            {
+                var userIdClaim = httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+                return userIdClaim?.Value ?? string.Empty;
+            }
+            return string.Empty; 
         }
+
 
 
 
