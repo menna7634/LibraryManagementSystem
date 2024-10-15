@@ -13,6 +13,9 @@ namespace Application.Interfaces
     public interface IPenaltyRepository
     {
         Task<IEnumerable<Penalty>> GetPenaltiesByUserAsync(string userId);
+        Task<Penalty> GetPenaltyByIdAsync(int id);
+        Task<bool> DeletePenaltyAsync(int id); 
+
         Task<IEnumerable<Penalty>> GetPenaltiesByCheckoutAsync(int checkoutId);
         Task AddPenaltyAsync(AddPenaltyVM penaltyVM);
         Task<bool> MarkAsPaidAsync(int penaltyId);

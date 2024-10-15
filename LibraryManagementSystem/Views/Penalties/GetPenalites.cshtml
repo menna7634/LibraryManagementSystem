@@ -1,9 +1,24 @@
 ﻿@model Application.Helpers.PaginatedResult<Application.Models.Penalty>
 @{
     ViewData["Title"] = "Penalties";
+    var successMessage = TempData["Message"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
 <h2>Penalties List</h2>
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
 
 <div class="mb-3">
     <form method="get" asp-action="GetPenalites" class="form-inline">
@@ -76,6 +91,10 @@
                         <a asp-action="MarkAsPaid" asp-route-penaltyId="@penalty.Id" class="btn btn-success btn-sm">Mark as Paid</a>
                     }
                     <a asp-action="EditPenalty" asp-route-id="@penalty.Id" class="btn btn-secondary btn-sm">Edit</a>
+
+                    <form asp-action="DeletePenalty" asp-route-id="@penalty.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this penalty?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
                 </td>
             </tr>
         }

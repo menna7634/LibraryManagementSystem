@@ -1,5 +1,7 @@
 ﻿using Application.Enums;
 using Application.Interfaces;
+using Application.Models;
+using Application.ViewModels.Penalty;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -46,5 +48,86 @@ namespace LibraryManagementSystem.Controllers
 
             return View(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPenalty(int id)
+        {
+            var penalty = await _penaltyRepository.GetPenaltyByIdAsync(id);
+            if (penalty == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new EditPenaltyVM
+            {
+                Id = penalty.Id,
+                Type = penalty.Type,
+                Amount = penalty.Amount,
+                IssuedDate = penalty.IssuedDate,
+                IsPaid = penalty.IsPaid,
+                PaidAt = penalty.PaidAt
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPenalty(EditPenaltyVM updatedPenaltyVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var penaltyToUpdate = await _penaltyRepository.GetPenaltyByIdAsync(updatedPenaltyVM.Id);
+                if (penaltyToUpdate == null)
+                {
+                    return NotFound();
+                }
+
+                penaltyToUpdate.Type = updatedPenaltyVM.Type;
+                penaltyToUpdate.Amount = updatedPenaltyVM.Amount;
+                penaltyToUpdate.IssuedDate = updatedPenaltyVM.IssuedDate;
+                penaltyToUpdate.IsPaid = updatedPenaltyVM.IsPaid;
+                penaltyToUpdate.PaidAt = updatedPenaltyVM.PaidAt;
+
+                await _penaltyRepository.UpdatePenaltyAsync(penaltyToUpdate);
+
+                TempData["Message"] = "Penalty updated successfully!";
+                return RedirectToAction("GetPenalites");
+            }
+
+            return View(updatedPenaltyVM);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeletePenalty(int id)
+        {
+            var penalty = await _penaltyRepository.GetPenaltyByIdAsync(id);
+            if (penalty == null)
+            {
+                return NotFound();
+            }
+
+            await _penaltyRepository.DeletePenaltyAsync(id); 
+
+            TempData["Message"] = "Penalty deleted successfully!";
+            return RedirectToAction("GetPenalites");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MarkAsPaid(int penaltyId)
+        {
+            var result = await _penaltyRepository.MarkAsPaidAsync(penaltyId);
+
+            if (!result)
+            {
+                TempData["ErrorMessage"] = "Penalty not found or could not be marked as paid.";
+                return RedirectToAction("GetPenalites"); 
+            }
+
+            TempData["Message"] = "Penalty marked as paid successfully!";
+            return RedirectToAction("GetPenalites");
+        }
+
     }
 }
+

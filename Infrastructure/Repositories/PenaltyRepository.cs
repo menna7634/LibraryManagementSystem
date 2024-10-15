@@ -130,5 +130,21 @@ namespace Infrastructure.Repositories
             };
         }
 
+        public async Task<Penalty> GetPenaltyByIdAsync(int id)
+        {
+            return await GetByIdAsync(id);
+        }
+
+        public async Task<bool> DeletePenaltyAsync(int id)
+        {
+            var penalty = await GetByIdAsync(id);
+            if (penalty == null) return false;
+
+            await DeleteAsync(penalty.Id);
+
+            return true;
+        }
+
+
     }
 }
