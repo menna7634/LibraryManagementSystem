@@ -5,17 +5,36 @@
 
 <h2>Edit Penalty</h2>
 
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var key in ViewData.ModelState.Keys)
+            {
+                var error = ViewData.ModelState[key]!.Errors.FirstOrDefault();
+                if (error != null)
+                {
+                    <li>@error.ErrorMessage</li>
+                    break;
+                }
+            }
+        </ul>
+    </div>
+}
+
 <div class="container">
     <form asp-action="EditPenalty" method="post">
         <div class="mb-3">
             <label asp-for="Type" class="form-label"></label>
-            <input asp-for="Type" class="form-control" />
+            <select asp-for="Type" class="form-control" asp-items="@Model.PenaltyTypeList" id="penaltyType">
+                <option value="">-- Select Penalty Type --</option>
+            </select>
             <span asp-validation-for="Type" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label asp-for="Amount" class="form-label"></label>
-            <input asp-for="Amount" class="form-control" type="number" step="0.01" />
+            <input asp-for="Amount" class="form-control" type="number" step="0.01" id="penaltyAmount" />
             <span asp-validation-for="Amount" class="text-danger"></span>
         </div>
 
@@ -48,6 +67,25 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('penaltyType').addEventListener('change', function () {
+            const selectedType = this.value;
+
+            const penaltyAmounts = {
+                "DamagedBook": 150.00,
+                "NonReturn": 200.00,
+                "UnpaidPreviousPenalties": 10.00,
+                "ViolationOfLibraryPolicies": 20.00
+            };
+
+            const amount = penaltyAmounts[selectedType] || 0;
+            document.getElementById('penaltyAmount').value = amount.toFixed(2);
+        });
+    });
+</script> 
+
 
 @section Scripts {
     @{

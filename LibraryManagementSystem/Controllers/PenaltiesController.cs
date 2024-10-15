@@ -5,6 +5,7 @@ using Application.ViewModels.Penalty;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -65,7 +66,9 @@ namespace LibraryManagementSystem.Controllers
                 Amount = penalty.Amount,
                 IssuedDate = penalty.IssuedDate,
                 IsPaid = penalty.IsPaid,
-                PaidAt = penalty.PaidAt
+                PaidAt = penalty.PaidAt,
+                PenaltyTypeList = new SelectList(Enum.GetValues(typeof(PenaltyType)))
+
             };
 
             return View(viewModel);
@@ -74,6 +77,14 @@ namespace LibraryManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> EditPenalty(EditPenaltyVM updatedPenaltyVM)
         {
+
+            if (!ModelState.IsValid)
+            {
+
+                var modelErrors = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                ModelState.AddModelError(string.Empty, $"Please correct the following errors: {modelErrors}");
+                return View("EditPenalty", updatedPenaltyVM);
+            }
             if (ModelState.IsValid)
             {
                 var penaltyToUpdate = await _penaltyRepository.GetPenaltyByIdAsync(updatedPenaltyVM.Id);

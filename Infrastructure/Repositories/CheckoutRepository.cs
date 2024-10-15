@@ -104,12 +104,14 @@ namespace Infrastructure.Repositories
                 .Include(c => c.ApplicationUser)
                 .Include(c => c.BookCopy.Book)
                 .AsQueryable();
+            // change the status to overdue if duedate is come 
 
             foreach (var checkout in query)
             {
                 if (checkout.DueDate < DateTime.Now && checkout.Status != CheckoutStatus.Overdue)
                 {
                     checkout.Status =CheckoutStatus.Overdue;
+                    await _libraryDbContext.SaveChangesAsync(); 
                 }
             }
 

@@ -41,7 +41,8 @@ namespace Infrastructure.Repositories
                 IssuedDate = DateTime.UtcNow,
                 IsPaid = penaltyVM.IsPaid,
                 ApplicationUserId = penaltyVM.ApplicationUserId,
-                CheckoutId = penaltyVM.CheckoutId
+                CheckoutId = penaltyVM.CheckoutId,
+
             };
 
             await AddAsync(penalty); 

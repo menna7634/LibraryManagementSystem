@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Application.ViewModels.Penalty
 {
@@ -28,6 +29,8 @@ namespace Application.ViewModels.Penalty
         [DataType(DataType.Date)]
         [Display(Name = "Paid Date")]
         public DateTime? PaidAt { get; set; }
+        public SelectList? PenaltyTypeList { get; set; }
+
 
     }
 }

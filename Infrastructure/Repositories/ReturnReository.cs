@@ -1,4 +1,5 @@
 ﻿
+using Application.Enums;
 using Application.Helpers;
 using Application.Interfaces;
 using Application.Models;
@@ -19,13 +20,13 @@ namespace Infrastructure.Repositories
         }
 
         public async Task<PaginatedResult<ReturnDetailsVM>> GetReturnsAsync(
-      string searchUser,
-      DateTime? searchDueDate,
-      DateTime? searchReturnDate,
-      bool? isOverdue,
-      string searchBook,
-      int pageNumber,
-      int pageSize)
+     string searchUser,
+     DateTime? searchDueDate,
+     DateTime? searchReturnDate,
+     bool? isOverdue,
+     string searchBook,
+     int pageNumber,
+     int pageSize)
         {
             var query = _libraryDbContext.Returns
                 .Include(r => r.Checkout)
@@ -34,10 +35,9 @@ namespace Infrastructure.Repositories
                     .ThenInclude(bc => bc.Book)
                 .AsQueryable();
 
-            // Apply filters based on user input
             if (!string.IsNullOrEmpty(searchUser))
             {
-                query = query.Where(r => r.Checkout.ApplicationUser.UserName.Contains(searchUser));
+                query = query.Where(r => r.Checkout.ApplicationUser.UserName!.Contains(searchUser));
             }
 
             if (searchDueDate.HasValue)
@@ -54,10 +54,12 @@ namespace Infrastructure.Repositories
             {
                 query = query.Where(r => r.Checkout.BookCopy.Book.Name.Contains(searchBook));
             }
+
             if (isOverdue.HasValue)
             {
                 query = query.Where(r => (r.ReturnDate > r.Checkout.DueDate) == isOverdue.Value);
             }
+
             var totalItems = await query.CountAsync();
 
             var paginatedResults = await query
@@ -67,7 +69,7 @@ namespace Infrastructure.Repositories
                 .Select(r => new ReturnDetailsVM
                 {
                     CheckoutId = r.CheckoutId,
-                    UserName = r.Checkout.ApplicationUser.UserName,
+                    UserName = r.Checkout.ApplicationUser.UserName ?? string.Empty,
                     BookName = r.Checkout.BookCopy.Book.Name,
                     BookCopyId = r.Checkout.BookCopyId,
                     DueDate = r.Checkout.DueDate,
@@ -75,8 +77,30 @@ namespace Infrastructure.Repositories
                 })
                 .ToListAsync();
 
-            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            foreach (var returnDetail in paginatedResults)
+            {
+                if (returnDetail.IsOverdue)
+                {
+                    var penalty = new Penalty
+                    {
+                        Type = PenaltyType.LateReturn, 
+                        Amount = returnDetail.Penalty,
+                        IssuedDate = DateTime.UtcNow,
+                        IsPaid = false,
+                        CheckoutId = returnDetail.CheckoutId,
+                        ApplicationUserId = await _libraryDbContext.Checkouts
+                            .Where(c => c.Id == returnDetail.CheckoutId)
+                            .Select(c => c.ApplicationUserId)
+                            .FirstOrDefaultAsync() ?? string.Empty
+                    };
 
+                    await _libraryDbContext.Penalties.AddAsync(penalty);
+                }
+            }
+
+            await _libraryDbContext.SaveChangesAsync(); 
+
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
             return new PaginatedResult<ReturnDetailsVM>
             {
@@ -86,6 +110,7 @@ namespace Infrastructure.Repositories
                 TotalItems = totalItems,
             };
         }
+
 
     }
 }
