@@ -22,6 +22,7 @@ namespace Infrastructure.Repositories
       string searchUser,
       DateTime? searchDueDate,
       DateTime? searchReturnDate,
+      bool? isOverdue,
       string searchBook,
       int pageNumber,
       int pageSize)
@@ -53,7 +54,10 @@ namespace Infrastructure.Repositories
             {
                 query = query.Where(r => r.Checkout.BookCopy.Book.Name.Contains(searchBook));
             }
-
+            if (isOverdue.HasValue)
+            {
+                query = query.Where(r => (r.ReturnDate > r.Checkout.DueDate) == isOverdue.Value);
+            }
             var totalItems = await query.CountAsync();
 
             var paginatedResults = await query

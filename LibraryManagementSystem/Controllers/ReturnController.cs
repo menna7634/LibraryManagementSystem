@@ -23,6 +23,7 @@ namespace LibraryManagementSystem.Controllers
         DateTime? searchDueDate,
         DateTime? searchReturnDate,
         string searchBook,
+         bool? isOverdue,
         int pageNumber = 1,
         int pageSize = 10)
         {
@@ -30,6 +31,7 @@ namespace LibraryManagementSystem.Controllers
                 searchUser,
                 searchDueDate,
                 searchReturnDate,
+                isOverdue,
                 searchBook,
                 pageNumber,
                 pageSize);
@@ -50,7 +52,8 @@ namespace LibraryManagementSystem.Controllers
             ViewData["pageNumber"] = pageNumber;
             ViewData["pageSize"] = pageSize;
             ViewData["TotalReturned"] = totalReturned;
-            ViewData["OverdueCount"] = overdueCount; 
+            ViewData["OverdueCount"] = overdueCount;
+            ViewData["isOverdue"] = isOverdue;
 
             return View(result);
         }

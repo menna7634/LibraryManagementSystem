@@ -20,6 +20,9 @@ namespace Application.ViewModels.Return
                                   ? (ReturnDate.Value - DueDate).Days
                                   : 0;
         public bool IsOverdue => OverdueDays > 0;
+
+        private const decimal PenaltyRate = 5.00m;
+        public decimal Penalty => IsOverdue ? OverdueDays * PenaltyRate : 0;
     }
 
 }

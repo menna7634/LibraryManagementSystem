@@ -8,6 +8,7 @@ using Application.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Application.ViewModels.Member;
 using Infrastructure.Data;
+using System.Security.Claims;
 
 namespace Infrastructure.Repositories
 {
@@ -194,6 +195,11 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Users
                    .FirstOrDefaultAsync(u => u.Id == userId);
+        }
+
+        public string GetCurrentUserId()
+        {
+            return  _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier)!;
         }
 
 

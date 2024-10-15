@@ -69,6 +69,7 @@ builder.Services.AddScoped<IMemberDashboardRepository, MemberDashboardRepository
 builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
 builder.Services.AddScoped<IReturnRepository, ReturnReository>();
 builder.Services.AddScoped<IContactFormRepository, ContactFormRepository>();
+builder.Services.AddScoped<IPenaltyRepository, PenaltyRepository>();
 
 
 
