@@ -1,4 +1,5 @@
 ﻿using Application.Helpers;
+using Application.Models;
 using Application.ViewModels.MemberDashboard;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace Application.Interfaces
     public interface IMemberDashboardRepository
     {
         public Task<PaginatedResult<GetAllBooksForMemberVM>> GetAllBooksAsync(string? searchTitle, string? searchGenre, string? searchAuthor, int pageNumber, int pageSize);
+        Task<PaginatedResult<UserPenaltiesVM>> GetPenaltiesByUserIdAsync(string userId, int pageNumber, int pageSize, bool? isPaid = null);
+
 
     }
 }

@@ -10,9 +10,5 @@ namespace Application.Interfaces
     public interface IBookCopyRepository
     {
         public Task AddBookCopyAsync(AddBookCopyVM bookCopy);
-
-        //public Task UpdateBookCopyAsync(int id, AddBookCopyVM bookCopy);
-        //public Task<ViewBookCopy> GetBookCopyById(int Id);
-        //public Task DeleteBookCopyAsync(int Id);
     }
 }

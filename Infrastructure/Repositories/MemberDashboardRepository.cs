@@ -1,5 +1,6 @@
 ﻿using Application.Helpers;
 using Application.Interfaces;
+using Application.Models;
 using Application.ViewModels.Book;
 using Application.ViewModels.MemberDashboard;
 using Infrastructure.Data;
@@ -73,6 +74,53 @@ namespace Infrastructure.Repositories
                 TotalItems = totalItems
             };
         }
+
+        public async Task<PaginatedResult<UserPenaltiesVM>> GetPenaltiesByUserIdAsync(
+          string userId, int pageNumber, int pageSize, bool? isPaid = null)
+        {
+            var query = _libraryDbContext.Penalties.AsQueryable();
+
+            query = query.Where(p => p.ApplicationUserId == userId);
+
+            if (isPaid.HasValue)
+            {
+                query = query.Where(p => p.IsPaid == isPaid.Value);
+            }
+
+            var totalItems = await query.CountAsync();
+
+            var penalties = await query
+                .Include(p => p.Checkout)
+                .ThenInclude(c => c.BookCopy)
+                .ThenInclude(bc => bc.Book) 
+                .OrderBy(p => p.IssuedDate) 
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(p => new UserPenaltiesVM
+                {
+                    Type = p.Type,
+                    Amount = p.Amount,
+                    IssuedDate = p.IssuedDate,
+                    IsPaid = p.IsPaid,
+                    CheckoutId = p.CheckoutId,
+                    BookTitle = p.Checkout.BookCopy.Book.Name, 
+                    BookCopyID = p.Checkout.BookCopy.Id
+                })
+                .ToListAsync();
+
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            // Return the paginated result
+            return new PaginatedResult<UserPenaltiesVM>
+            {
+                Items = penalties,
+                CurrentPage = pageNumber,
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
+        }
+
+
 
     }
 }
