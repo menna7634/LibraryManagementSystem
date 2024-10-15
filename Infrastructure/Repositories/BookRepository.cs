@@ -58,8 +58,6 @@ namespace Infrastructure.Repositories
             //implement search
             if (!string.IsNullOrEmpty(searchStatus))
             {
-                Console.WriteLine($"searchStatus value: {searchStatus}");  // Debug output
-
                 if (searchStatus == "true")
                 {
                     books = books.Where(b => b.BookCopies.Any(bc => bc.Available == true));
