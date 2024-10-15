@@ -4,6 +4,7 @@ using Application.Interfaces;
 using Application.Models;
 using Application.ViewModels.Penalty;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -12,35 +13,32 @@ namespace Infrastructure.Repositories
     public class PenaltyRepository : GenericRepository<Penalty>, IPenaltyRepository
     {
         private readonly LibraryDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public PenaltyRepository(LibraryDbContext context) : base(context)
+
+        public PenaltyRepository(LibraryDbContext context, UserManager<ApplicationUser> userManager) : base(context)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        public async Task<IEnumerable<Penalty>> GetPenaltiesByUserAsync(string userId)
-        {
-            return await _context.Penalties
-                .Where(p => p.ApplicationUserId == userId)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Penalty>> GetPenaltiesByCheckoutAsync(int checkoutId)
-        {
-            return await _context.Penalties
-                .Where(p => p.CheckoutId == checkoutId)
-                .ToListAsync();
-        }
 
         public async Task AddPenaltyAsync(AddPenaltyVM penaltyVM)
         {
+
+            var user = await _userManager.FindByNameAsync(penaltyVM.Username); 
+
+            if (user == null)
+            {
+                throw new Exception("User not found."); 
+            }
             var penalty = new Penalty
             {
                 Type = penaltyVM.Type,
                 Amount = CalculatePenaltyAmount(penaltyVM.Type),
                 IssuedDate = DateTime.UtcNow,
-                IsPaid = penaltyVM.IsPaid,
-                ApplicationUserId = penaltyVM.ApplicationUserId,
+                IsPaid = penaltyVM.IsPaid,   
+                ApplicationUserId = user.Id,
                 CheckoutId = penaltyVM.CheckoutId,
 
             };
@@ -91,6 +89,7 @@ namespace Infrastructure.Repositories
         {
             var query = _context.Penalties.AsQueryable();
 
+
             if (isPaid.HasValue)
             {
                 query = query.Where(p => p.IsPaid == isPaid.Value);
@@ -127,7 +126,7 @@ namespace Infrastructure.Repositories
                 Items = penalties,
                 TotalItems = totalItems,
                 CurrentPage = pageNumber,
-                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
+                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize),
             };
         }
 
@@ -144,6 +143,10 @@ namespace Infrastructure.Repositories
             await DeleteAsync(penalty.Id);
 
             return true;
+        }
+        public async Task<int> CountPenaltiesAsync(bool isPaid)
+        {
+            return await _context.Penalties.CountAsync(p => p.IsPaid == isPaid);
         }
 
 

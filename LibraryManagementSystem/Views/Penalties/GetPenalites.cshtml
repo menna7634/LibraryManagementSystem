@@ -43,13 +43,18 @@
             <input type="number" id="searchbookCopy" name="bookCopyId" value="@ViewData["searchbookCopy"]" class="form-control" placeholder="Enter Book Copy ID">
         </div>
         <div class="form-group mt-3 text-end">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary me-2">
                 <i class="bi bi-search"></i> Search
             </button>
-            <a asp-action="GetPenalties" class="btn btn-secondary">
+            <a asp-action="GetPenalites" class="btn btn-secondary me-2">
                 <i class="bi bi-arrow-clockwise"></i> Reset
             </a>
+            <a asp-action="AddPenalty" class="btn btn-success">
+                <i class="bi bi-plus"></i> Add Penalty
+            </a>
         </div>
+
+
         
     </form>
 </div>
@@ -60,6 +65,41 @@
         @ViewBag.Message
     </div>
 }
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card border-success shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title text-success mb-0">Paid Penalties</h5>
+                        <p class="mb-0">Total Penalties that have been Paid.</p>
+                    </div>
+                    <div>
+                        <h2 class="text-success mb-0">@ViewData["totalPaidPenalties"]</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title text-danger mb-0">Unpaid Penalties</h5>
+                        <p class="mb-0">Total Penalties that have not been Paid.</p>
+                    </div>
+                    <div>
+                        <h2 class="text-danger mb-0">@ViewData["totalUnpaidPenalties"]</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <table class="table table-striped">
     <thead>

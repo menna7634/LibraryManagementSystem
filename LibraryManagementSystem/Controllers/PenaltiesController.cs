@@ -4,6 +4,7 @@ using Application.Models;
 using Application.ViewModels.Penalty;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -12,9 +13,14 @@ namespace LibraryManagementSystem.Controllers
     public class PenaltiesController : Controller
     {
         private readonly IPenaltyRepository _penaltyRepository;
-        public PenaltiesController(IPenaltyRepository penaltyRepository)
+        private readonly ICheckoutRepository _checkoutRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public PenaltiesController(IPenaltyRepository penaltyRepository , ICheckoutRepository checkoutRepository , UserManager<ApplicationUser> userManager)
         {
             _penaltyRepository = penaltyRepository;
+            _checkoutRepository = checkoutRepository; 
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> GetPenalites(
@@ -35,10 +41,13 @@ namespace LibraryManagementSystem.Controllers
             if (!result.Items.Any())
             {
                 ViewBag.Message = "No checkouts found for the specified Search criteria you provide";
+
             }
+            var totalPaidPenalties = await _penaltyRepository.CountPenaltiesAsync(true); 
+            var totalUnpaidPenalties = await _penaltyRepository.CountPenaltiesAsync(false); 
 
-         
-
+            ViewData["totalPaidPenalties"] = totalPaidPenalties;
+            ViewData["totalUnpaidPenalties"] = totalUnpaidPenalties;
             ViewData["searchUser"] = username;
             ViewData["searchisPaid"] = isPaid;
             ViewData["searchBook"] = bookId;
@@ -138,6 +147,46 @@ namespace LibraryManagementSystem.Controllers
             TempData["Message"] = "Penalty marked as paid successfully!";
             return RedirectToAction("GetPenalites");
         }
+
+        [HttpGet]
+        public IActionResult AddPenalty()
+        {
+            var viewModel = new AddPenaltyVM
+            {
+                Type = PenaltyType.LateReturn, 
+                IsPaid = false, 
+                PenaltyTypeList = new SelectList(Enum.GetValues(typeof(PenaltyType)))
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPenalty(AddPenaltyVM penaltyVM)
+        {
+            var user = await _userManager.FindByNameAsync(penaltyVM.Username); 
+            if (user == null)
+            {
+                ModelState.AddModelError("Username", "The specified username does not exist."); 
+            }
+
+            var checkout = await _checkoutRepository.GetCheckoutByIdAsync(penaltyVM.CheckoutId);
+            if (checkout == null)
+            {
+                ModelState.AddModelError("CheckoutId", "The specified checkout ID does not exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                penaltyVM.PenaltyTypeList = new SelectList(Enum.GetValues(typeof(PenaltyType)));
+                return View(penaltyVM);
+            }
+
+            await _penaltyRepository.AddPenaltyAsync(penaltyVM);
+            TempData["Message"] = "Penalty added successfully!";
+            return RedirectToAction("GetPenalites");
+        }
+
 
     }
 }

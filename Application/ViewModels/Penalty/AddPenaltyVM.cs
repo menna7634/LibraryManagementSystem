@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Application.Enums;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Application.ViewModels.Penalty
 {
@@ -12,7 +13,9 @@ namespace Application.ViewModels.Penalty
         public PenaltyType Type { get; set; }
         public decimal Amount { get; set; }
         public bool IsPaid { get; set; }
-        public string ApplicationUserId { get; set; }
+
+        public string Username { get; set; }
         public int CheckoutId { get; set; }
+        public SelectList? PenaltyTypeList { get; set; }
     }
 }

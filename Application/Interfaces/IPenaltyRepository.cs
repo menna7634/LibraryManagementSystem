@@ -12,11 +12,9 @@ namespace Application.Interfaces
 {
     public interface IPenaltyRepository
     {
-        Task<IEnumerable<Penalty>> GetPenaltiesByUserAsync(string userId);
+        public Task<int> CountPenaltiesAsync(bool isPaid);
         Task<Penalty> GetPenaltyByIdAsync(int id);
         Task<bool> DeletePenaltyAsync(int id); 
-
-        Task<IEnumerable<Penalty>> GetPenaltiesByCheckoutAsync(int checkoutId);
         Task AddPenaltyAsync(AddPenaltyVM penaltyVM);
         Task<bool> MarkAsPaidAsync(int penaltyId);
         decimal CalculatePenaltyAmount(PenaltyType type, int overdueDays = 0);
