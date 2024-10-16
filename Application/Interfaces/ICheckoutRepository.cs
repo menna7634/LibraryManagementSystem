@@ -16,7 +16,6 @@ namespace Application.Interfaces
         Task<BookCopy?> GetBookCopyById(int id);
         Task<IEnumerable<BookCopy>> GetAvailableBookCopiesByBookIdAsync(int bookId);
         Task<bool> MarkBookCopyAsUnavailableAsync(int bookCopyId);
-        Task<IEnumerable<ApplicationUser>> GetUsersAsync();
         Task<IEnumerable<Book>> GetBooksAsync();
         Task<PaginatedResult<CheckoutDetailVM>> GetCheckoutsAsync(string searchUser, DateTime? searchDate, string searchBook, CheckoutStatus? searchStatus, int pageNumber, int pageSize);
         Task<CheckoutDetailVM> GetCheckoutByIdAsync(int id);

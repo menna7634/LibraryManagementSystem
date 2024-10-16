@@ -82,11 +82,6 @@ namespace Infrastructure.Repositories
 
             return true;
         }
-
-        public async Task<IEnumerable<ApplicationUser>> GetUsersAsync()
-        {
-            return await _libraryDbContext.Users.ToListAsync();
-        }
         public async Task<IEnumerable<Book>> GetBooksAsync()
         {
             return await _libraryDbContext.Books.ToListAsync();

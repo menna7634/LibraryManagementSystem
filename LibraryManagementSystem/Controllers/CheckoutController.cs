@@ -2,7 +2,9 @@
 using Application.Interfaces;
 using Application.Models;
 using Application.ViewModels.Checkout;
+using Application.ViewModels.Member;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,17 +16,22 @@ namespace LibraryManagementSystem.Controllers
     {
         private readonly ICheckoutRepository _checkoutRepository;
         private readonly LibraryDbContext _libraryDbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public CheckoutController(ICheckoutRepository checkoutRepository , LibraryDbContext libraryDbContext)
+
+        public CheckoutController(ICheckoutRepository checkoutRepository , LibraryDbContext libraryDbContext , UserManager<ApplicationUser> userManager)
         {
             _checkoutRepository = checkoutRepository;
             _libraryDbContext = libraryDbContext;
+            _userManager = userManager;
 
         }
 
         public async Task<IActionResult> Create()
         {
+            var users = await _userManager.GetUsersInRoleAsync("Member");
+
             var viewModel = new AddCheckoutVM
             {
                 Books = (await _checkoutRepository.GetBooksAsync()).Select(b => new SelectListItem
@@ -33,12 +40,15 @@ namespace LibraryManagementSystem.Controllers
                     Text = b.Name 
                 }),
                 BookCopies = Enumerable.Empty<SelectListItem>(),
-                Users = (await _checkoutRepository.GetUsersAsync()).Select(u => new SelectListItem
-                {
-                    Value = u.Id.ToString(),
-                    Text = u.UserName
+
+                Users = users.Select(u => new SelectListItem
+            {
+                Value = u.Id,
+               Text = u.UserName
                 })
-            };
+
+ 
+        };
 
             return View("AddCheckout", viewModel);
         }
@@ -98,11 +108,13 @@ namespace LibraryManagementSystem.Controllers
                     Text = $"Copy ID: {b.Id}"
                 });
 
-            checkoutVM.Users = (await _checkoutRepository.GetUsersAsync()).Select(u => new SelectListItem
+            var users = await _userManager.GetUsersInRoleAsync("Member");
+            checkoutVM.Users = users.Select(u => new SelectListItem
             {
                 Value = u.Id,
                 Text = u.UserName
             });
+
         }
 
         [HttpGet("api/bookcopies/{bookId}")]
