@@ -165,10 +165,23 @@ namespace LibraryManagementSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult ResetPassword()
+        public IActionResult ResetPassword(string userId, string token)
         {
-            return View();
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Invalid password reset request.");
+            }
+
+            var model = new ResetPasswordViewModel
+            {
+                UserId = userId,
+                Token = token,
+               
+            };
+
+            return View(model);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> RequestResetPassword(ResetPasswordRequestViewModel model)
@@ -188,7 +201,7 @@ namespace LibraryManagementSystem.Controllers
 
             // Generate password reset token
             var token = await _userRepository.GeneratePasswordResetTokenAsync(user);
-            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, token }, protocol: HttpContext.Request.Scheme);
+            var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, token },Request.Scheme);
 
             await _emailService.SendEmailAsync(model.Email, "Reset Password",
                 $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
@@ -204,7 +217,7 @@ namespace LibraryManagementSystem.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var user = await _userManager.FindByIdAsync(model.UserId!);
             if (user == null)
             {
                 ModelState.AddModelError("", "User not found.");
