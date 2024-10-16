@@ -19,15 +19,16 @@ textarea {
     margin-top: 3%;
 }
 
+
 .form {
-    width: 94%;
+    max-width: auto;
+    margin: 0 auto;
     margin-left: 30%;
     padding: 2%;
     border-radius: 30px;
     box-shadow: 0 0 1em rgba(0, 0, 0, 0.0625);
     /*box-shadow: 0 0 0em rgba(0, 0, 0, 0.0625);*/
     background-color: #fff;
-    
 }
 
 input:not(input[type="checkbox"]) {
@@ -185,8 +186,8 @@ input::-webkit-inner-spin-button {
 .btn {
     padding: 10px 30px;
     text-transform: capitalize;
-    color:#fff;
-    background: #cbaab1;
+    color: #fff;
+    background: #142c54;
     border-radius: 5px;
     border: none;
     outline: none;

@@ -2,8 +2,11 @@
 @{
     ViewData["Title"] = "Get Returns";
 }
+@{
+    Layout = "AdminLayout";
+}
 
-<div class="search-form bg-light p-3 rounded shadow-sm mb-4">
+<div class="search-form bg-light p-3 rounded shadow-sm mb-4" style="margin-top:5%">
     <form method="get" asp-action="GetReturns" class="row g-3">
         <div class="col-md-3">
             <label for="searchUser">Search by User</label>
@@ -68,6 +71,8 @@
 }
 else
 {
+    <h2>Return Details</h2>
+
     <div class="row">
         <div class="col-md-6">
             <div class="card border-success shadow-sm">
