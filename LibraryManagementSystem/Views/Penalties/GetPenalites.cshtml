@@ -1,11 +1,14 @@
 ﻿@model Application.Helpers.PaginatedResult<Application.Models.Penalty>
 @{
+    Layout = "AdminLayout";
+}
+@{
     ViewData["Title"] = "Penalties";
     var successMessage = TempData["Message"] as string;
     var errorMessage = TempData["ErrorMessage"] as string;
 }
 
-<h2>Penalties List</h2>
+<h2 style="margin-top:5%">Penalties List</h2>
 @if (!string.IsNullOrEmpty(successMessage))
 {
     <div class="alert alert-success">

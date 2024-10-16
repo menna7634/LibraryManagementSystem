@@ -1,10 +1,12 @@
 ﻿@model Application.ViewModels.Checkout.AddCheckoutVM
-
+@{
+    Layout = "AdminLayout";
+}
 @{
     ViewData["Title"] = "Create Checkout";
 }
 
-<h2>Add Checkout</h2>
+<h2 style="margin-top:5%">Add Checkout</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -80,3 +82,5 @@
         }
     </script>
 }
+
+

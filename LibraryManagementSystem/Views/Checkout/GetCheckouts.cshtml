@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = "Get Checkouts";
 }
-
+@{
+    Layout = "AdminLayout";
+}
 <style>
     .unclickable {
         pointer-events: none; /* Disable pointer events */
@@ -11,7 +13,7 @@
     }
 </style>
 
-<div class="search-form bg-light p-3 rounded shadow-sm mb-4">
+<div class="search-form bg-light p-3 rounded shadow-sm mb-4" style="margin-top:5%">
     <form method="get" asp-action="GetCheckouts" class="row g-3">
         <div class="col-md-3">
             <input type="text"

@@ -64,7 +64,8 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="@Url.Action("GetCheckouts", "Checkout")"
+                           class="@(ViewContext.RouteData.Values["controller"].ToString() == "Checkout" && ViewContext.RouteData.Values["action"].ToString() == "GetCheckouts" ? "active" : "")">
                             <span class="las la-book-open"></span>
                             <small>Issue Book</small>
                         </a>
@@ -79,7 +80,8 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="@Url.Action("GetPenalites", "Penalties")"
+                           class="@(ViewContext.RouteData.Values["controller"].ToString() == "Penalties" && ViewContext.RouteData.Values["action"].ToString() == "GetPenalites" ? "active" : "")">
                             <span class="las la-exclamation-circle"></span>
                             <small>Penalties</small>
                         </a>
@@ -119,6 +121,7 @@
 
     </div>
 
-    
+    @RenderSection("Scripts", required: false) <!-- Ensure this line is present -->
+
 </body>
 </html>

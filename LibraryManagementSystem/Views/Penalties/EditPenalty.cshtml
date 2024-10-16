@@ -1,9 +1,12 @@
 ﻿@model Application.ViewModels.Penalty.EditPenaltyVM
 @{
+    Layout = "AdminLayout";
+}
+@{
     ViewData["Title"] = "Edit Penalty";
 }
 
-<h2>Edit Penalty</h2>
+<h2 style="margin-top:5%">Edit Penalty</h2>
 
 @if (!ViewData.ModelState.IsValid)
 {
