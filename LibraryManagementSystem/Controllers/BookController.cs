@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.ViewModels.Publisher;
 using Infrastructure.Repositories;
 using System.Drawing.Printing;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace LibraryManagementSystem.Controllers
 {
     public class BookController : Controller
@@ -20,11 +21,14 @@ namespace LibraryManagementSystem.Controllers
         }
         public async Task<IActionResult> Index(string? searchTitle,string? searchGenre, string? searchAuthor, string? searchStatus, int pageNumber = 1, int pageSize = 10)
         {
+            var genres = await _libraryDbContext.Genres.ToListAsync();
+            ViewData["Genres"] = new SelectList(genres, "Name", "Name");
             var books = await _bookRepository.GetAllBooksAsync(searchTitle, searchGenre, searchAuthor, searchStatus, pageNumber, pageSize);
             if (!books.Items.Any())
             {
                 ViewBag.Message = "No Books found for the specified Search criteria you provide";
             }
+
             ViewData["searchTitle"] = searchTitle;
             ViewData["searchGenre"] = searchGenre;
             ViewData["searchAuthor"] = searchAuthor;

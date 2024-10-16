@@ -1,22 +1,20 @@
 ﻿@model Application.ViewModels.Book.AddBookVM
-
 @{
     ViewData["Title"] = "Edit Book";
 }
+@{
+    Layout = "AdminLayout";
+}
 <html lang="en" dir="ltr">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Boxicons CDN Link -->
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
     <!-- BOOTSTRAB -->
     <link rel="stylesheet" type="text/css"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <!-- CSS -->
     <link rel="stylesheet" href="~/css/addbook.css">
-    <link rel="stylesheet" href="~/css/book.css">
-    <link rel="stylesheet" href="~/css/AdminDashboard.css">
      <style>
        
         /* Content area adjustments */
@@ -26,17 +24,54 @@
         }
 
         .form {
-            max-width: 800px;
+            max-width: auto;
             margin: 0 auto;
         }
 
-        /* Responsive Design */
-       
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn2 {
+            padding: 12px 36px;
+            text-transform: capitalize;
+            color: #fff;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn2:hover {
+                background-color: #0f2342; /* New hover color */
+            }
+
+        .btn-add {
+            background-color: #142c54; /* Initial darker color */
+        }
+
+            .btn-add:hover {
+                background-color: #1b89c0; /* Lighter color on hover */
+            }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
     </style>
 </head>
 <body>
 
-<h2 style="margin-left:12%; font-size:xx-large; margin-top:3%;margin-bottom:2%">Edit Book</h2>
+<h2 style="margin-left:4%; font-size:xx-large; margin-top:7%;margin-bottom:2%">Edit Book</h2>
 <div class="form" id="form">
 
 <form asp-action="Edit" method="post">
@@ -97,15 +132,13 @@
 
     
     <div class="buttons">
-            <button type="submit" class="btn" id="add-btn" >Save Changes</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn2 btn-add" id="add-btn">Save Changes</button>
+                <a asp-action="Index" class="btn2 btn-secondary" id="cancel-btn">Cancel</a>
     </div>
     
 </form>
 </div>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
-<script src="js/script.js"></script>
+
+<script src="~/js/script.js"></script>
 </body>
 </html>

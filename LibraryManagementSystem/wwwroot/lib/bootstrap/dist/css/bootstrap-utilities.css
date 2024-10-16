@@ -1253,7 +1253,7 @@
   text-align: center !important;
 }
 
-.text-decoration-none {
+/*.text-decoration-none {
   text-decoration: none !important;
 }
 
@@ -1263,7 +1263,7 @@
 
 .text-decoration-line-through {
   text-decoration: line-through !important;
-}
+}*/
 
 .text-lowercase {
   text-transform: lowercase !important;

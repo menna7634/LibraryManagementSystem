@@ -3,16 +3,18 @@
 @{
     ViewBag.Title = "Contact Messages";
 }
+@{
+    Layout = "AdminLayout";
+}
 
-<h2>Contact Messages</h2>
-
+<div class="search-form bg-light p-3 rounded shadow-sm mb-4" style="margin-top:5%">
 @if (!string.IsNullOrEmpty(ViewBag.Message))
 {
     <div class="alert alert-warning">
         @ViewBag.Message
     </div>
 }
-<form method="get" class="mb-4 d-flex flex-column flex-md-row align-items-start">
+<form method="get" class="mb-4 d-flex flex-column flex-md-row align-items-start" >
     <div class="col-md-3 mb-3">
         <label for="searchEmail">Search by Email</label>
         <input type="email"
@@ -48,7 +50,7 @@
     </div>
 </form>
 
-
+</div>
 
 <div class="row mb-4">
     <div class="col-md-4">
@@ -81,6 +83,7 @@
         </div>
     </div>
 </div>
+<h2 style="margin-top:2%">Contact Messages</h2>
 
 <table class="table">
     <thead>

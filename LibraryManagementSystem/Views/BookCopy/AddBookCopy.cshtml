@@ -3,9 +3,13 @@
 @{
     ViewData["Title"] = "Add Book Copy";
 }
+@{
+    Layout = "AdminLayout";
+}
 <html lang="en" dir="ltr">
 
 <head>
+   
     <link rel="stylesheet" href="~/css/addbook.css">
     <link rel="stylesheet" href="~/css/book.css">
     <link rel="stylesheet" href="~/css/AdminDashboard.css">
@@ -28,7 +32,9 @@
     </style>
 </head>
 <body>
-<h2>@ViewData["Title"]</h2>
+    <h2 style="margin-left:20%; font-size:xx-large; margin-bottom:2% ; margin-top:7%">Add Book Copy</h2>
+    <div class="form" id="form">
+
 <form asp-action="Create" method="post" class="form-horizontal">
     <!-- Hidden input for BookId (comes from route) -->
     <input type="hidden" asp-for="BookId" />
@@ -53,11 +59,6 @@
             <a asp-controller="Book" asp-action="Index" class="btn btn-secondary">Cancel</a>
         </div>
 </form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+</div>
 </body>
 </html>

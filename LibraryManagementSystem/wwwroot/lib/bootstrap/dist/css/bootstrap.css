@@ -151,7 +151,7 @@ p {
   margin-bottom: 1rem;
 }
 
-abbr[title],
+/*abbr[title],
 abbr[data-bs-original-title] {
   -webkit-text-decoration: underline dotted;
   text-decoration: underline dotted;
@@ -159,7 +159,7 @@ abbr[data-bs-original-title] {
   -webkit-text-decoration-skip-ink: none;
   text-decoration-skip-ink: none;
 }
-
+*/
 address {
   margin-bottom: 1rem;
   font-style: normal;
@@ -228,7 +228,7 @@ sup {
   top: -0.5em;
 }
 
-a {
+/*a {
   color: #0d6efd;
   text-decoration: underline;
 }
@@ -240,7 +240,7 @@ a:not([href]):not([class]), a:not([href]):not([class]):hover {
   color: inherit;
   text-decoration: none;
 }
-
+*/
 pre,
 code,
 kbd,
@@ -3402,11 +3402,11 @@ textarea.form-control-lg {
   background-color: transparent;
 }
 
-.btn-link {
+/*.btn-link {
   font-weight: 400;
   color: #0d6efd;
   text-decoration: underline;
-}
+}*/
 .btn-link:hover {
   color: #0a58ca;
 }
@@ -7612,13 +7612,13 @@ textarea.form-control-lg {
   text-decoration: none !important;
 }
 
-.text-decoration-underline {
+/*.text-decoration-underline {
   text-decoration: underline !important;
 }
 
 .text-decoration-line-through {
   text-decoration: line-through !important;
-}
+}*/
 
 .text-lowercase {
   text-transform: lowercase !important;
