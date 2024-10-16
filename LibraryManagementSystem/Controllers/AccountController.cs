@@ -249,6 +249,16 @@ namespace LibraryManagementSystem.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _userRepository.SignOutAsync(); 
+
+            return RedirectToAction("Login", "Account");
+        }
+
+
     }
 
 

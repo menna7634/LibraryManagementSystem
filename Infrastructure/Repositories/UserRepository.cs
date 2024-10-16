@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.ViewModels.Member;
 using Infrastructure.Data;
 using System.Security.Claims;
+using System.Net.Http;
 
 namespace Infrastructure.Repositories
 {
@@ -117,9 +118,15 @@ namespace Infrastructure.Repositories
         public async Task SignOutAsync()
         {
             await _signInManager.SignOutAsync();
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext != null)
+            {
+                httpContext.Response.Cookies.Delete("jwt");
+            }
         }
 
-  
+
+
         public async Task<PaginatedResult<UserVM>> SearchUsersAsync(string searchUser, string searchEmail, DateTime? searchJoinedAt, string orderBy, int pageNumber, int pageSize)
         {
             var userRoleId = await _dbContext.Roles

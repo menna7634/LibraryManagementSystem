@@ -114,14 +114,14 @@
 
                 <div class="user">
                     <span class="las la-power-off"></span>
-                    <span><a href="home.html">Log out</a></span>
-                </div>
-            </div>
+                    <form id="logout-form" action="/Account/Logout" method="post" style="display: inline;">
+                        <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Log out</a>
+                    </form>
         </header>
 
     </div>
 
-    @RenderSection("Scripts", required: false) <!-- Ensure this line is present -->
+    @RenderSection("Scripts", required: false) 
 
 </body>
 </html>
