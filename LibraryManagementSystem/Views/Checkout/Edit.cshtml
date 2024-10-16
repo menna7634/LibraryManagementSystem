@@ -1,10 +1,12 @@
 ﻿@model Application.ViewModels.Checkout.CheckoutDetailVM
-
+@{
+    Layout = "AdminLayout";
+}
 @{
     ViewData["Title"] = "Edit Checkout";
 }
 
-<h2>Edit Checkout</h2>
+<h2 style="margin-top:5%">Edit Checkout</h2>
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">

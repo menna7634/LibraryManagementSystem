@@ -1,10 +1,12 @@
 ﻿@model Application.ViewModels.Checkout.CheckoutDetailVM
-
+@{
+    Layout = "AdminLayout";
+}
 @{
     ViewData["Title"] = "Delete Checkout";
 }
 
-<h2>Delete Checkout</h2>
+<h2 style="margin-top:5%">Delete Checkout</h2>
 
 @if (ViewBag.ErrorMessage != null)
 {
