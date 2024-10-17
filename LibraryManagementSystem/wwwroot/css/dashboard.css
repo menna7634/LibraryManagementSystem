@@ -1,4 +1,9 @@
-﻿.tiles {
+﻿
+body {
+    font-family: 'Poppins', sans-serif; /* Apply Poppins font to the entire body */
+}
+
+.tiles {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     column-gap: 1rem;
@@ -15,38 +20,40 @@
 .tile {
     padding: 1rem;
     border-radius: 8px;
-    background-color: var(--c-olive-500);
-    color: var(--c-gray-900);
+    background: linear-gradient(135deg, #1f3a73, #4169a5); /* Lighter gradient */
+    color: white;
     min-height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-    transition: 0.25s ease;
+    transition: transform 0.25s ease, background 0.25s ease;
+    font-family: 'Poppins', sans-serif; /* Font for tiles */
 }
 
     .tile:hover {
         transform: translateY(-5px);
+        background: linear-gradient(135deg, #2b4a92, #5c8bce); /* Lighter hover effect */
     }
 
     .tile:focus-within {
-        box-shadow: 0 0 0 2px var(--c-gray-800), 0 0 0 4px var(--c-olive-500);
+        box-shadow: 0 0 0 2px white, 0 0 0 4px #1f3a73;
     }
 
     .tile:nth-child(2) {
-        background-color: var(--c-green-500);
+        background-color: #178f63;
     }
 
-        .tile:nth-child(2):focus-within {
-            box-shadow: 0 0 0 2px var(--c-gray-800), 0 0 0 4px var(--c-green-500);
+        .tile:nth-child(2):hover {
+            background-color: #1dbb76;
         }
 
     .tile:nth-child(3) {
-        background-color: var(--c-gray-300);
+        background-color: #a0a0a0;
     }
 
-        .tile:nth-child(3):focus-within {
-            box-shadow: 0 0 0 2px var(--c-gray-800), 0 0 0 4px var(--c-gray-300);
+        .tile:nth-child(3):hover {
+            background-color: #c0c0c0;
         }
 
     .tile a {
@@ -56,36 +63,16 @@
         justify-content: space-between;
         font-weight: 600;
         position: relative;
+        color: inherit;
+        font-size: 1rem; /* Slightly increase link font size */
     }
-
-        .tile a:focus {
-            box-shadow: none;
-        }
-
-        .tile a:after {
-            content: "";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
 
         .tile a .icon-button {
             color: inherit;
             border-color: inherit;
         }
 
-            .tile a .icon-button:hover,
-            .tile a .icon-button:focus {
-                background-color: transparent;
-            }
-
-            .tile a .icon-button i {
-                transform: none;
-            }
-
+/* Tile Header Styles */
 .tile-header {
     display: flex;
     align-items: center;
@@ -104,9 +91,14 @@
 
         .tile-header h3 span:first-child {
             font-weight: 600;
+            font-size: 1.25rem; /* Make the title bigger */
+            letter-spacing: 0.5px; /* Improve letter spacing */
         }
 
         .tile-header h3 span:last-child {
-            font-size: 0.825em;
-            font-weight: 200;
+            font-size: 1rem; /* Slightly larger subtitle */
+            font-weight: 400; /* Light weight for subtitle */
+            color: rgba(255, 255, 255, 0.8); /* Softer white for numbers */
         }
+
+
