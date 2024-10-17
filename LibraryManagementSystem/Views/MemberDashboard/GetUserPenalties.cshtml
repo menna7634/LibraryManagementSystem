@@ -6,10 +6,15 @@
     ViewData["Title"] = "User Penalties";
 }
 
-<h2 style="margin-top:6%">Penalties</h2>
+<html lang="en" dir="ltr">
+<head>
+    <link rel="stylesheet" href="~/css/GetUserHistory.css" />
 
+</head>
+<body>
 <div class="container mt-4">
-    <form method="get" class="mb-3">
+        <div class="search-form bg-light p-3 rounded shadow-sm mb-4" style="margin-top:5%">
+        <form method="get" class="mb-3">
         <div class="row">
             <div class="col-md-4">
                 <label for="isPaidFilter" class="form-label">Payment Status</label>
@@ -24,8 +29,10 @@
             </div>
         </div>
     </form>
+    </div>
+    <h2>Penalties</h2>
 
-    <table class="table table-bordered">
+        <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Penalty Type</th>
@@ -74,7 +81,7 @@
             @for (var i = 1; i <= Model.TotalPages; i++)
             {
                 <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link" asp-action="GetUserPenalties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.TotalItems">@i</a>
+                        <a class="page-link" style="@(i == Model.CurrentPage ? "background-color: #142c54; color: white;" : "")" asp-action="GetUserPenalties" asp-route-pageNumber="@i" asp-route-pageSize="@Model.TotalItems">@i</a>
                 </li>
             }
 
@@ -87,3 +94,5 @@
         </ul>
     </nav>
 </div>
+</body>
+</html>
