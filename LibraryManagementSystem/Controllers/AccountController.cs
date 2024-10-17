@@ -1,10 +1,13 @@
-﻿using Application.Interfaces;
+﻿using Application.Enums;
+using Application.Interfaces;
 using Application.Models;
 using Application.ViewModels;
+using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Common;
 
 namespace LibraryManagementSystem.Controllers
@@ -12,18 +15,20 @@ namespace LibraryManagementSystem.Controllers
     public class AccountController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly LibraryDbContext _libraryDbContext;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
         private readonly IPasswordValidator<ApplicationUser> _passwordValidator;
 
 
 
-        public AccountController(IUserRepository userRepository , UserManager<ApplicationUser> userManager, IEmailService emailService, IPasswordValidator<ApplicationUser> passwordValidator)
+        public AccountController(IUserRepository userRepository , UserManager<ApplicationUser> userManager, IEmailService emailService, IPasswordValidator<ApplicationUser> passwordValidator, LibraryDbContext libraryDbContext)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _emailService = emailService;
-            _passwordValidator = passwordValidator; 
+            _passwordValidator = passwordValidator;
+            _libraryDbContext = libraryDbContext;
         }
         public IActionResult Index()
         {
@@ -258,8 +263,39 @@ namespace LibraryManagementSystem.Controllers
             return View(); 
         }
 
-        public IActionResult AdminDashboard()
+        public async Task<IActionResult> AdminDashboard()
         {
+            //counts of checkouts 
+            var checkoutCounts = new List<int>();
+            for (int month = 1; month <= 12; month++)
+            {
+                int count = await _libraryDbContext.Checkouts
+                    .CountAsync(c => c.CheckoutDate.Month == month && c.CheckoutDate.Year == DateTime.Now.Year);
+                checkoutCounts.Add(count);
+            }
+            ViewBag.CheckoutCounts = checkoutCounts;
+
+            var totalBooks = await _libraryDbContext.Books.CountAsync();
+            ViewBag.TotalBooks = totalBooks;
+
+            var totalMembers = await _libraryDbContext.Users.CountAsync(); 
+            ViewBag.totalMembers = totalMembers;
+
+            var totalCheckouts = await _libraryDbContext.Checkouts.CountAsync();
+            ViewBag.totalCheckouts = totalCheckouts;
+
+            var PaidPenalties = await _libraryDbContext.Penalties.Where(p=>p.IsPaid==true).CountAsync();
+            ViewBag.PaidPenalties = PaidPenalties;
+
+            var UnPaidPenalties = await _libraryDbContext.Penalties.Where(p => p.IsPaid == false).CountAsync();
+            ViewBag.UnPaidPenalties = UnPaidPenalties;
+
+            var RCheckouts = await _libraryDbContext.Checkouts.Where(i=>i.Status == CheckoutStatus.Returned).CountAsync();
+            ViewBag.RCheckouts = RCheckouts;
+
+            var URCheckouts = await _libraryDbContext.Checkouts.Where(i => i.Status == CheckoutStatus.Overdue).CountAsync();
+            ViewBag.URCheckouts = URCheckouts;
+
             return View();
         }
 
