@@ -165,7 +165,12 @@
             </div>
         </form>
     </div>
-
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success">
+            @successMessage
+        </div>
+    }
 @if (!string.IsNullOrEmpty(ViewBag.Message))
 {
     <div class="alert alert-info">

@@ -91,12 +91,12 @@ namespace LibraryManagementSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            await _bookCopyRepository.DeleteBookCopyAsync(id);
-            TempData["Message"] = "Book Copy Deleted successfully!";
             var t = await _libraryDbContext.BookCopies
                 .Where(bc => bc.Id == id)
                 .Select(bc => bc.BookId)
                 .FirstOrDefaultAsync();
+            await _bookCopyRepository.DeleteBookCopyAsync(id);
+            TempData["Message"] = "Book Copy Deleted successfully!";
             return RedirectToAction("List", "BookCopy", new { id = t });
         }
 

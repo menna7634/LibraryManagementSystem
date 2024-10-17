@@ -88,7 +88,7 @@ namespace LibraryManagementSystem.Controllers
                     .Select(p => new ViewPublisherVM { Id = p.Id, Name = p.Name })
                     .ToListAsync()
             };
-
+            TempData["Message"] = "Book Edited successfully!";
             return View(model);
         }
 
@@ -112,7 +112,6 @@ namespace LibraryManagementSystem.Controllers
             model.AvailablePublishers = await _libraryDbContext.Publishers
                 .Select(p => new ViewPublisherVM { Id = p.Id, Name = p.Name })
                 .ToListAsync();
-
             return View(model);
         }
 
