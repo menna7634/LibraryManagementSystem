@@ -169,7 +169,6 @@ namespace Infrastructure.Repositories
                 .Select(c => new MemberHistoryVM
                 {
                     BookTitle = c.BookCopy.Book.Name,
-                    BookCopyId = c.BookCopyId,
                     CheckoutDate = c.CheckoutDate,
                     DueDate = c.DueDate,
                     ReturnDate = c.Return.ReturnDate
