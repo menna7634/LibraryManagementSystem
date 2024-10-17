@@ -19,7 +19,7 @@ namespace Application.ViewModels.Book
         public int? PublisherId { get; set; }
         public string PublisherName { get; set; }
         public DateTime Date { get; set; }
-        public ICollection<ViewBookCopy?> BookCopies { get; set; }
+        public ICollection<ViewBookCopyVM?>? BookCopies { get; set; }
         
     }
 }

@@ -1,0 +1,230 @@
+﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.Book.ViewBookCopyVM>
+@{
+    Layout = "AdminLayout";
+}
+@{
+    ViewData["Title"] = "List";
+    var successMessage = TempData["Message"] as string;
+}
+<html lang="en" dir="ltr">
+
+<head>
+    <!-- BOOTSTRAB -->
+    <link rel="stylesheet" type="text/css"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+
+
+    <style>
+        .unclickable {
+            pointer-events: none; /* Disable pointer events */
+            opacity: 0.6; /* Make the button look faded */
+            cursor: default; /* Change the cursor to indicate it's not clickable */
+        }
+        table th {
+        text-align: center;
+        white-space: nowrap; /* Prevent wrapping */
+
+        }
+
+        .btn2 {
+            padding: 12px 36px;
+            text-transform: capitalize;
+            color: #fff;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn2:hover {
+                background-color: #0f2342; /* New hover color */
+            }
+
+        .btn-add {
+            background-color: #142c54; /* Initial darker color */
+        }
+
+            .btn-add:hover {
+                background-color: #1b89c0; /* Lighter color on hover */
+            }
+
+
+
+        .page-link {
+            color: #142c54;
+        }
+
+
+
+        .btn3-add-copy {
+            background-color: #1b89c0; /* Initial background color */
+            color: white;
+            text-transform: capitalize;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            transition: background-color 0.3s ease; /* Smooth transition effect */
+
+        }
+
+            .btn3-add-copy:hover {
+                background-color: #166d9a; /* Darker shade on hover */
+            }
+
+
+
+
+        .dropdown-icon {
+            position: relative;
+        }
+
+            .dropdown-icon .form-control {
+                padding-right: 30px; /* Add padding to prevent text overlap with the icon */
+            }
+
+            .dropdown-icon .icon {
+                position: absolute;
+                top: 50%;
+                right: 10px; /* Adjust to position the icon properly */
+                transform: translateY(-50%); /* Center the icon vertically */
+                pointer-events: none; /* Prevent the icon from interfering with dropdown interaction */
+            }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <div class="search-form bg-light p-3 rounded shadow-sm mb-4" style="margin-top:5%">
+        <form method="get" asp-action="List" class="row g-3">
+            <div class="col-md-3">
+                <label for="searchStatus">Search by Status</label>
+
+                <select name="searchStatus" class="form-select">
+                    <option value="">All </option>
+                    <option value="true" selected="@(ViewData["searchStatus"]?.ToString() == "true")">Available</option>
+                    <option value="false" selected="@(ViewData["searchStatus"]?.ToString() == "false")">Unavailable</option>
+
+                </select>
+            </div>
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <a asp-action="List" class="btn btn-secondary">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success">
+            @successMessage
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info">
+            @ViewBag.Message
+        </div>
+
+    }
+    else
+    {
+    <div>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>All Book Copies</h2>
+                   
+            </div>
+            <div class="col-md-6 text-right">
+                <a asp-controller="BookCopy" asp-action="Create" asp-route-Id="@ViewData["BookId"]">
+                   <button class="btn2 btn-add" type="button" id="add-btn">Add New Copy</button>
+                </a>
+            </div>
+
+        </div>
+        <table class="table" style="margin-top:2%">
+            <thead>
+                <tr style="text-align:center">
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th >Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var book in Model.Items)
+                {
+                    <tr style="text-align:center">
+                        <td>@book.Location</td>
+                        
+                        <td>
+                                @if (book.Available)
+                                {
+                                    <span class="badge bg-success" style="padding: .8em .65em;font-size: 1rem; height: 40px; width: 120px;">Available</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger" style="padding: .8em .65em;font-size: 1rem; height: 40px; width: 120px;">Not Available</span>
+                                }
+                        </td>
+
+                        <td>
+                            <a asp-controller="BookCopy" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-primary" style="margin-top:1.5px;height:40px">Edit</a>
+                            <a asp-controller="BookCopy" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this book?');" style="margin-top:1.5px;height:40px">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="pagination">
+            <ul class="pagination">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("List", new {
+                        searchStatus = ViewData["searchStatus"],
+                        pageNumber = Model.CurrentPage - 1,
+                        pageSize = ViewData["pageSize"]
+                    })">Previous</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" style="@(i == Model.CurrentPage ? "background-color: #142c54; color: white;" : "")" href="@Url.Action("List", new {
+                        searchStatus = ViewData["searchStatus"],
+                        pageNumber = i,
+                        pageSize = ViewData["pageSize"]
+                    })">@i</a>
+                    </li>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("List", new {
+                        searchStatus = ViewData["searchStatus"],
+                        pageNumber = Model.CurrentPage + 1,
+                        pageSize = ViewData["pageSize"]
+                    })">Next</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    }
+    <script src="~/js/script.js"></script>
+
+</body>
+</html>
