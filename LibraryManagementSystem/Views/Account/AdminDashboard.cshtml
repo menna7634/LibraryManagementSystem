@@ -1,193 +1,213 @@
 ﻿@{
     Layout = "AdminLayout";
 }
-@* <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-    <title>Modern Admin Dashboard</title>
-    <link rel="stylesheet" href="~/css//AdminDashboard.css">
-    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
-</head>
-<body>
 
-
-
-    <input type="checkbox" id="menu-toggle">
-    <div class="sidebar">
-        <div class="side-content">
-            <div class="profile">
-                <div class="profile-img bg-img" style="background-image: url('@Url.Content("~/Images/User/user (2).png")')"></div>
-                <h4>Welcome Librarian</h4>
-            </div>
-
-            <div class="side-menu">
-                <ul>
-                    <li>
-                        <a href="#" class="active">
-                            <span class="las la-home"></span>
-                            <small>Dashboard</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="@Url.Action("Index", "Book")">
-                            <span class="las la-book"></span>
-                            <small>
-                                Manage Books
-                            </small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="las la-users"></span>
-                            <small>
-                               Manage Members
-                            </small>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            <span class="las la-book-open"></span>
-                            <small>Issue Book</small>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            <span class="las la-undo"></span>
-                            <small>Return Books</small>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="#">
-                            <span class="las la-exclamation-circle"></span>
-                            <small>Penalties</small>
-                        </a>
-                    </li>
-
-
-     
-                    <li>
-                        <a href="#">
-                            <span class="las la-envelope"></span>
-                            <small>Contacts</small>
-                        </a>
-                    </li>
-                 
-
-
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="main-content">
-
-        <header>
-            <div class="header-content">
-                <label for="menu-toggle">
-                    <span class="las la-bars"></span>
-                </label>
-
-                    <div class="user">
-                        <span class="las la-power-off"></span>
-                        <span><a href="home.html">Log out</a></span>
-                    </div>
-                </div>
-        </header>
-
-    </div>
-
-
-</body>
-</html>
- *@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Add Font Awesome for icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="~/css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body>
-<div class="tiles" style="margin-top:8%">
-    <article class="tile">
-        <div class="tile-header">
-            <i class="ph-lightning-light"></i>
-            <h3>
-                <span>Number Of Books</span>
-                <span>456</span>
-            </h3>
-        </div>
-        <a href="#">
-            <span>Go to service</span>
-            <span class="icon-button">
-                <i class="ph-caret-right-bold"></i>
-            </span>
-        </a>
-    </article>
-    <article class="tile">
-        <div class="tile-header">
-            <i class="ph-fire-simple-light"></i>
-            <h3>
-                <span>Number Of Members</span>
-                <span>300</span>
-            </h3>
-        </div>
-        <a href="#">
-            <span>Go to service</span>
-            <span class="icon-button">
-                <i class="ph-caret-right-bold"></i>
-            </span>
-        </a>
-    </article>
-    <article class="tile">
-        <div class="tile-header">
-            <i class="ph-file-light"></i>
-            <h3>
-                 <span>Number Of Checkouts</span>
-                <span>200</span>
-            </h3>
-        </div>
-        <a href="#">
-            <span>Go to service</span>
-            <span class="icon-button">
-                <i class="ph-caret-right-bold"></i>
-            </span>
-        </a>
-    </article>
+    <div class="tiles" style="margin-top:8%">
+
+        <!-- Total Number of Books (neutral color) -->
         <article class="tile">
             <div class="tile-header">
-                <i class="ph-lightning-light"></i>
+                <i class="fas fa-book" style="color: #ffffff;"></i> <!-- White color for books -->
                 <h3>
-                    <span>Number Of Returns</span>
-                    <span>150</span>
+                    <span>Total Number Of Books</span>
+                    <span>456</span>
                 </h3>
             </div>
             <a href="#">
-                <span>Go to service</span>
+                <span>Go to Books</span>
                 <span class="icon-button">
                     <i class="ph-caret-right-bold"></i>
                 </span>
             </a>
         </article>
+
+        <!-- Total Number of Members (lighter tone) -->
         <article class="tile">
             <div class="tile-header">
-                <i class="ph-lightning-light"></i>
+                <i class="fas fa-users" style="color: #2980B9;"></i> <!-- Medium blue for members -->
                 <h3>
-                    <span>Number Of Penalities</span>
-                    <span>49</span>
+                    <span>Total Number Of Members</span>
+                    <span>300</span>
                 </h3>
             </div>
             <a href="#">
-                <span>Go to service</span>
+                <span>Go to Members</span>
                 <span class="icon-button">
                     <i class="ph-caret-right-bold"></i>
                 </span>
             </a>
         </article>
-</div>
+
+        <!-- Total Number of Checkouts (neutral color) -->
+        <article class="tile">
+            <div class="tile-header">
+                <i class="fas fa-shopping-cart" style="color: #ffffff;"></i> <!-- White color for checkouts -->
+                <h3>
+                    <span>Total Number Of Checkouts</span>
+                    <span>123</span>
+                </h3>
+            </div>
+            <a href="#">
+                <span>Go to Checkouts</span>
+                <span class="icon-button">
+                    <i class="ph-caret-right-bold"></i>
+                </span>
+            </a>
+        </article>
+
+        <!-- Total Number of Returns (medium tone) -->
+        <article class="tile">
+            <div class="tile-header">
+                <i class="fas fa-undo" style="color: #27AE60;"></i> <!-- Medium green for returns -->
+                <h3>
+                    <span>Total Number Of Returns</span>
+                    <span>100 Returned / 23 Not Returned</span>
+                </h3>
+            </div>
+            <a href="#">
+                <span>Go to Returns</span>
+                <span class="icon-button">
+                    <i class="ph-caret-right-bold"></i>
+                </span>
+            </a>
+        </article>
+
+        <!-- Total Number of Penalties (suitable muted color) -->
+        <article class="tile">
+            <div class="tile-header">
+                <i class="fas fa-money-bill-wave" style="color: #D35400;"></i> <!-- Muted orange for penalties -->
+                <h3>
+                    <span>Total Number Of Penalties </span>
+                    <span>49 Paid / 10 Not Paid</span>
+                </h3>
+            </div>
+            <a href="#">
+                <span>Go to Penalties</span>
+                <span class="icon-button">
+                    <i class="ph-caret-right-bold"></i>
+                </span>
+            </a>
+        </article>
+
+    </div>
+
+    <canvas id="myChart" style="width: 100%; height: 300px;"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                datasets: [{
+                    label: 'Checkouts',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+@*     <canvas id="checkoutsBarChart" style="width: 100%; height: 300px;"></canvas>
+    <script>
+        var ctx = document.getElementById('checkoutsBarChart').getContext('2d');
+        var checkoutsBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                datasets: [{
+                    label: 'Monthly Checkouts',
+                    data: [30, 50, 70, 40, 60, 80],
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+  
+
+    <canvas id="memberGrowthChart" style="width: 100%; height: 300px;"></canvas>
+    <script>
+        var ctx = document.getElementById('memberGrowthChart').getContext('2d');
+        var memberGrowthChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                datasets: [{
+                    label: 'Member Growth',
+                    data: [100, 120, 150, 180, 200, 250],
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+   
+    <canvas id="categoryBarChart" style="width: 100%; height: 300px;"></canvas>
+    <script>
+        var ctx = document.getElementById('categoryBarChart').getContext('2d');
+        var categoryBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Fiction', 'Non-Fiction', 'Science', 'History', 'Biography'],
+                datasets: [{
+                    label: 'Number of Books',
+                    data: [120, 80, 60, 90, 40],
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+ *@
+
+
+   
+
+
 </body>
 </html>
