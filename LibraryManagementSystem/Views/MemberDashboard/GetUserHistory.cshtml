@@ -5,13 +5,17 @@
 @{
     ViewData["Title"] = "Member History";
 }
-<link rel="stylesheet" href="~/css/GetUserHistory.css" />
+<html lang="en" dir="ltr">
+<head>
+    <link rel="stylesheet" href="~/css/GetUserHistory.css" />
+    <!-- ====== heart icons ======= -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+</head>
+<body>
 
-
-<h2 class="mb-4 text-center">Member History</h2>
-
-<div class="container">
-    <form method="get" class="mb-4 d-flex justify-content-between align-items-center">
+    <div class="search-form bg-light p-3 rounded shadow-sm mb-4">
+        <form method="get" class="mb-4 d-flex justify-content-between align-items-center">
         <div class="form-group mb-0">
             <label for="bookTitle" class="mr-2">Book Name:</label>
 
@@ -35,15 +39,15 @@
     <option value="notReturned" selected="@(ViewData["returnStatus"] as string == "notReturned" ? "selected" : "")">Not Returned</option>
        </select>
         </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100 mb-3">Search</button> 
+        <div class="col-md-2" style="margin-top:10%">
+            <button type="submit" class="btn btn-primary w-100 mb-3">Search</button>
         </div>
 
-
     </form>
-
-    <table class="table table-bordered table-striped shadow-sm">
-        <thead class="thead-dark">
+    </div>
+        <h2>History</h2>
+        <table class="table table-bordered table-striped">
+        <thead style="background-color:#142c54">
             <tr>
                 <th>Book Title</th>
                 <th>Checkout Date</th>
@@ -101,7 +105,7 @@
         </div>
     </div>
 
-</div>
 
-
+</body>
+</html>
 

@@ -265,7 +265,7 @@ namespace LibraryManagementSystem.Controllers
 
         public async Task<IActionResult> AdminDashboard()
         {
-            //counts of checkouts 
+            //counts of checkouts for chart
             var checkoutCounts = new List<int>();
             for (int month = 1; month <= 12; month++)
             {
@@ -278,7 +278,8 @@ namespace LibraryManagementSystem.Controllers
             var totalBooks = await _libraryDbContext.Books.CountAsync();
             ViewBag.TotalBooks = totalBooks;
 
-            var totalMembers = await _libraryDbContext.Users.CountAsync(); 
+            var id = await _libraryDbContext.Roles.Where(i => i.Name == "Member").FirstAsync();
+            var totalMembers = await _libraryDbContext.UserRoles.Where(r => r.RoleId == id.Id).CountAsync();
             ViewBag.totalMembers = totalMembers;
 
             var totalCheckouts = await _libraryDbContext.Checkouts.CountAsync();
