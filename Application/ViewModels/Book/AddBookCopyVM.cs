@@ -8,9 +8,10 @@ namespace Application.ViewModels.Book
 {
     public class AddBookCopyVM
     {
+        public int? Id { get; set; }
         public int BookId { get; set; }
         public string Location { get; set; }
-        public bool Available { get; set; } = true;
+        public bool Available { get; set; }
 
     }
 }

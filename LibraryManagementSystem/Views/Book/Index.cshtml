@@ -1,8 +1,12 @@
 ﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.Book.ViewBookVM>
 
-
 @{
     ViewData["Title"] = "Index";
+    ViewData["Title"] = "Add";
+    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index";
+
+    var successMessage = TempData["Message"] as string;
 }
 @{
     Layout = "AdminLayout";
@@ -119,15 +123,7 @@
                        placeholder="Search by Title"
                        value="@ViewData["searchTitle"]" />
             </div>
-            @* <div class="col-md-3">
-                <label for="searchGenre">Search by Genre</label>
-                <input type="text"
-                       name="searchGenre"
-                       class="form-control"
-                       placeholder="Search by Genre"
-                       value="@ViewData["searchGenre"]" />
-            </div> *@
-            
+
 
             <div class="col-md-3">
                 <label for="searchAuthor">Search by Author</label>
@@ -169,7 +165,8 @@
             </div>
         </form>
     </div>
-    @if (!string.IsNullOrEmpty(ViewBag.Message))
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
 {
     <div class="alert alert-info">
         @ViewBag.Message
@@ -198,7 +195,7 @@ else
                 <th>Genres</th>
                 <th>Publisher</th>
                 <th>Added Date</th>
-                <th>View Copies</th>
+                <th>Book Copies</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -231,22 +228,17 @@ else
 
                         @if (book.BookCopies != null && book.BookCopies.Any())
                         {
-                            <ol>
-                                @foreach (var copy in book.BookCopies)
-                                {
-                                     <li>@copy.Location <br/> Available: @(copy.Available ? "Yes" : "No")</li>
-                                 }
-                            </ol>
+                                <a asp-controller="BookCopy" asp-action="List" asp-route-id="@book.Id" class="btn btn-add" style="width:90px;margin-top:1.5px;height:40px;margin-left:10px;color:#fff"> View </a>
                         }
                         else
                         {
-                            <span>No Copies</span>
+                                <span style="margin-left:10px; font-style:italic; font-weight:bold; color:#142c54;">No Copies</span>
                         }
                     </td>
                     <td >
-                            <a asp-controller="BookCopy" asp-action="Create" asp-route-id="@book.Id" class="btn btn3 btn3-add-copy"> Add Copy</a>
-                        <a asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-primary">Edit</a>
-                        <a asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
+                            <a asp-controller="BookCopy" asp-action="Create" asp-route-id="@book.Id" class="btn btn3 btn3-add-copy" style="width:100px;margin-top:1.5px;height:40px;margin-left:30px"> Add Copy</a>
+                            <a asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id" class="btn btn-primary" style="margin-top:1.5px;height:40px">Edit</a>
+                            <a asp-controller="Book" asp-action="Delete" asp-route-id="@book.Id" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this book?');" style="margin-top:1.5px;height:40px">Delete</a>
                     </td>
                 </tr>
             }

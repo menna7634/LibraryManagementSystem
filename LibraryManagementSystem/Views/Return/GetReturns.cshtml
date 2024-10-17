@@ -156,7 +156,7 @@ else
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
                 <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("GetReturns", new {
+                    <a class="page-link" style="@(i == Model.CurrentPage ? "background-color: #142c54; color: white;" : "")" href="@Url.Action("GetReturns", new {
                         searchUser = ViewData["searchUser"],
                         searchDueDate = ViewData["searchDueDate"],
                         searchReturnDate = ViewData["searchReturnDate"],

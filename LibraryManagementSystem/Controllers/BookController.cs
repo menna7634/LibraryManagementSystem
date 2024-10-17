@@ -58,7 +58,8 @@ namespace LibraryManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 await _bookRepository.AddBookAsync(model);
-                return RedirectToAction("Index");
+                TempData["Message"] = "Book Added successfully!";
+                return RedirectToAction("Index", "Book");
             }
             return View(model);
         }
@@ -123,6 +124,7 @@ namespace LibraryManagementSystem.Controllers
                 return NotFound();
             }
             await _bookRepository.DeleteBookAsync(id);
+            TempData["Message"] = "Book Deleted successfully!";
             return RedirectToAction("Index");
         }
 

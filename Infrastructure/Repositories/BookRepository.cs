@@ -87,7 +87,7 @@ namespace Infrastructure.Repositories
                 int id = book.PublisherId;
                 var Pub = _libraryDbContext.Publishers.FirstOrDefault(b => b.Id == id);
                 var bc = book.BookCopies
-                        .Select(b => new ViewBookCopy
+                        .Select(b => new ViewBookCopyVM
                         {
                             Available = b.Available,
                             Location = b.Location
@@ -212,32 +212,6 @@ namespace Infrastructure.Repositories
 
 
         #endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

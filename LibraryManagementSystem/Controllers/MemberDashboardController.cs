@@ -1,7 +1,10 @@
 ﻿using Application.Interfaces;
+using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -9,13 +12,17 @@ namespace LibraryManagementSystem.Controllers
     {
         private readonly IMemberDashboardRepository _memberDashboardRepository;
         private readonly IUserRepository _userRepository;
-        public MemberDashboardController(IMemberDashboardRepository memberDashboardRepository, IUserRepository userRepository)
+        private readonly LibraryDbContext _libraryDbContext;
+        public MemberDashboardController(IMemberDashboardRepository memberDashboardRepository, IUserRepository userRepository, LibraryDbContext libraryDbContext)
         {
             _memberDashboardRepository = memberDashboardRepository;
             _userRepository = userRepository;
+            _libraryDbContext = libraryDbContext;
         }
         public async Task<IActionResult> Index(string? searchTitle, string? searchGenre, string? searchAuthor,int pageNumber = 1, int pageSize = 10)
         {
+            var genres = await _libraryDbContext.Genres.ToListAsync();
+            ViewData["Genres"] = new SelectList(genres, "Name", "Name");
             var books = await _memberDashboardRepository.GetAllBooksAsync(searchTitle, searchGenre, searchAuthor, pageNumber, pageSize);
             if (!books.Items.Any())
             {
