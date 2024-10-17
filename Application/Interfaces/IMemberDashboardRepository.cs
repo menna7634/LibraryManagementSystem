@@ -13,6 +13,8 @@ namespace Application.Interfaces
     {
         public Task<PaginatedResult<GetAllBooksForMemberVM>> GetAllBooksAsync(string? searchTitle, string? searchGenre, string? searchAuthor, int pageNumber, int pageSize);
         Task<PaginatedResult<UserPenaltiesVM>> GetPenaltiesByUserIdAsync(string userId, int pageNumber, int pageSize, bool? isPaid = null);
+        Task<PaginatedResult<MemberHistoryVM>> GetMemberHistoryAsync(string userId, int pageNumber, int pageSize, string? bookTitle = null, DateTime? checkoutDate = null, DateTime? dueDate = null, string? returnStatus = null);
+
 
 
     }

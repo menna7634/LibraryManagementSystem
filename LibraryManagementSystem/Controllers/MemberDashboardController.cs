@@ -52,5 +52,40 @@ namespace LibraryManagementSystem.Controllers
 
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserHistory(
+    int pageNumber = 1,
+    int pageSize = 10,
+    string? bookTitle = null,
+    DateTime? checkoutDate = null,
+    DateTime? dueDate = null,
+    string? returnStatus = null)
+        {
+            var userId = _userRepository.GetCurrentUserId(HttpContext);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User is not logged in.");
+            }
+
+            var history = await _memberDashboardRepository.GetMemberHistoryAsync(
+                userId,
+                pageNumber,
+                pageSize,
+                bookTitle,
+                checkoutDate,
+                dueDate,
+                returnStatus);
+
+            ViewData["bookTitle"] = bookTitle;
+            ViewData["checkoutDate"] = checkoutDate;
+            ViewData["dueDate"] = dueDate;
+            ViewData["returnStatus"] = returnStatus;
+
+            return View(history);
+        }
+
+
     }
 }

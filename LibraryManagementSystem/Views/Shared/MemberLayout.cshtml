@@ -42,7 +42,8 @@
                     </li>
 
                     <li>
-                        <a href="#">
+                        <a href="@Url.Action("GetUserHistory", "MemberDashboard")"
+                            class="@(ViewContext.RouteData.Values["controller"].ToString() == "MemberDashboard" && ViewContext.RouteData.Values["action"].ToString() == "GetUserHistory" ? "active" : "")">
                             <span class="las la-history"></span>
                             <small>History</small>
                         </a>

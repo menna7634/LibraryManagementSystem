@@ -1,0 +1,109 @@
+﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.MemberDashboard.MemberHistoryVM>
+@{
+    Layout = "MemberLayout";
+}
+@{
+    ViewData["Title"] = "Member History";
+}
+<link rel="stylesheet" href="~/css/GetUserHistory.css" />
+
+
+<h2 class="mb-4 text-center">Member History</h2>
+
+<div class="container">
+    <form method="get" class="mb-4 d-flex justify-content-between align-items-center">
+        <div class="form-group mb-0">
+            <label for="bookTitle" class="mr-2">Book Name:</label>
+
+            <input type="text" name="bookTitle" class="form-control" placeholder="Search by book Name" value="@ViewData["bookTitle"]" />
+        </div>
+        <div class="form-group mb-0">
+            <label for="checkoutDate" class="mr-2">Checkout Date: </label>
+
+            <input type="date" name="checkoutDate" class="form-control" value="@ViewData["checkoutDate"]" />
+        </div>
+        <div class="form-group mb-0">
+            <label for="dueDate" class="mr-2">Due Date: </label>
+            <input type="date" name="dueDate" class="form-control" value="@ViewData["dueDate"]" />
+        </div>
+        <div class="col-md-2">
+            <label for="returnStatus" class="form-label">Return Status</label>
+
+        <select name="returnStatus" id="returnStatus" class="form-select">
+    <option value="" selected="@(string.IsNullOrEmpty(ViewData["returnStatus"] as string) ? "selected" : "")">All</option>
+    <option value="returned" selected="@(ViewData["returnStatus"] as string == "returned" ? "selected" : "")">Returned</option>
+    <option value="notReturned" selected="@(ViewData["returnStatus"] as string == "notReturned" ? "selected" : "")">Not Returned</option>
+       </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100 mb-3">Search</button> 
+        </div>
+
+
+    </form>
+
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th>Book Title</th>
+                <th>Book Copy ID</th>
+                <th>Checkout Date</th>
+                <th>Due Date</th>
+                <th>Return Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Any())
+            {
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.BookTitle</td>
+                        <td>@item.BookCopyId</td>
+                        <td>@item.CheckoutDate.ToString("yyyy-MM-dd")</td>
+                        <td>@item.DueDate.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            @if (item.ReturnDate.HasValue)
+                            {
+                                @item.ReturnDate.Value.ToString("yyyy-MM-dd")
+                            }
+                            else
+                            {
+                                <span class="badge badge-warning">Not Returned</span>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No history records found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <p class="mb-0">Page <strong>@Model.CurrentPage</strong> of <strong>@Model.TotalPages</strong></p>
+        <div class="btn-group">
+            @if (Model.CurrentPage > 1)
+            {
+                <a href="?pageNumber=@(Model.CurrentPage - 1)&pageSize=@Model.Items.Count" class="btn btn-outline-primary">
+                    <span class="las la-arrow-left"></span> Previous
+                </a>
+            }
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <a href="?pageNumber=@(Model.CurrentPage + 1)&pageSize=@Model.Items.Count" class="btn btn-outline-primary">
+                    Next <span class="las la-arrow-right"></span>
+                </a>
+            }
+        </div>
+    </div>
+
+</div>
+
+
+

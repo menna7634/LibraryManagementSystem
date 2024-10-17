@@ -110,10 +110,78 @@ namespace Infrastructure.Repositories
 
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-            // Return the paginated result
             return new PaginatedResult<UserPenaltiesVM>
             {
                 Items = penalties,
+                CurrentPage = pageNumber,
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
+        }
+        public async Task<PaginatedResult<MemberHistoryVM>> GetMemberHistoryAsync(
+    string userId,
+    int pageNumber,
+    int pageSize,
+    string? bookTitle = null,
+    DateTime? checkoutDate = null,
+    DateTime? dueDate = null,
+    string? returnStatus = null)
+        {
+            var query = _libraryDbContext.Checkouts
+                .Where(c => c.ApplicationUserId == userId)
+                .Include(c => c.BookCopy)
+                .ThenInclude(bc => bc.Book)
+                .Include(c => c.Return)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(bookTitle))
+            {
+                query = query.Where(c => c.BookCopy.Book.Name.Contains(bookTitle));
+            }
+
+            if (checkoutDate.HasValue)
+            {
+                query = query.Where(c => c.CheckoutDate.Date == checkoutDate.Value.Date);
+            }
+
+            if (dueDate.HasValue)
+            {
+                query = query.Where(c => c.DueDate.Date == dueDate.Value.Date);
+            }
+
+            if (!string.IsNullOrEmpty(returnStatus))
+            {
+                if (returnStatus.Equals("returned", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(c => c.Return != null);
+                }
+                else if (returnStatus.Equals("notReturned", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(c => c.Return == null);
+                }
+            }
+
+            var totalItems = await query.CountAsync();
+            var items = await query
+                .OrderBy(c => c.CheckoutDate)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(c => new MemberHistoryVM
+                {
+                    BookTitle = c.BookCopy.Book.Name,
+                    BookCopyId = c.BookCopyId,
+                    CheckoutDate = c.CheckoutDate,
+                    DueDate = c.DueDate,
+                    ReturnDate = c.Return.ReturnDate
+                })
+                .ToListAsync();
+
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+
+            return new PaginatedResult<MemberHistoryVM>
+            {
+                Items = items,
                 CurrentPage = pageNumber,
                 TotalPages = totalPages,
                 TotalItems = totalItems
