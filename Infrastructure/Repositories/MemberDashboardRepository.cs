@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace Infrastructure.Repositories
 {
@@ -186,8 +187,44 @@ namespace Infrastructure.Repositories
                 TotalItems = totalItems
             };
         }
+        public async Task<PaginatedResult<WishlistVM>> GetWishlistAsync(string userId, int pageNumber, int pageSize , string? searchTitle, string? searchGenre)
+        {
+            var query = _libraryDbContext.WishlistBooks
+                .Include(wb => wb.Book)
+                .ThenInclude(b => b.Genres)
+                .Where(wb => wb.Wishlist.UserId == userId).AsQueryable();
+            if (!string.IsNullOrEmpty(searchTitle))
+            {
+                query = query.Where(b => b.Book.Name.Contains(searchTitle));
+            }
+            if (!string.IsNullOrEmpty(searchGenre))
+            {
+                query = query.Where(b => b.Book.Genres.Any(g => g.Name.Contains(searchGenre)));
+            }
+            var totalItems = await query.CountAsync();
 
+            var items = await query
+           .Skip((pageNumber - 1) * pageSize)
+           .Take(pageSize)
+          .Select(wb => new WishlistVM
+          {
+              Title = wb.Book.Name,
+              Author = wb.Book.Author,
+              Genres = wb.Book.Genres.Select(g => g.Name).ToList(),
 
+          })
+           .ToListAsync();
+
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            return new PaginatedResult<WishlistVM>
+            {
+                Items = items,
+                CurrentPage = pageNumber,
+                TotalPages = totalPages,
+                TotalItems = totalItems
+            };
+        }
 
     }
 }

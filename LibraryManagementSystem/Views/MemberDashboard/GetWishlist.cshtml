@@ -1,0 +1,100 @@
+﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.MemberDashboard.WishlistVM>
+
+@{
+    ViewData["Title"] = "My Wishlist";
+    Layout = "MemberLayout";
+}
+
+<head>
+        <link rel="stylesheet" href="~/css/GetUserHistory.css" />
+   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <style>
+        .table {
+            margin-top: 20px;
+        }
+
+        .pagination {
+            justify-content: flex-start;
+        }
+    </style>
+</head>
+
+    <div class="search-form bg-light p-3 rounded shadow-sm mb-4" style="margin-top:5%">
+        <form method="get" asp-action="GetWishlist" class="row g-3">
+            <div class="col-md-4">
+                <label for="searchTitle">Search by Book Title</label>
+                <input type="text" name="searchTitle" class="form-control" placeholder="Search by Title" value="@ViewData["searchTitle"]" />
+            </div>
+
+        <div class="col-md-3">
+            <label for="searchGenre">Search by Genre</label>
+            <div class="dropdown-icon position-relative">
+                @Html.DropDownList("searchGenre", (SelectList)ViewData["Genres"], "Select Genre", new { @class = "form-control dropdown", id = "searchGenre" })
+                <span class="icon position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%);">
+                    <i class="las la-caret-down"></i>
+                </span>
+            </div>
+        </div>
+
+
+            <div class="col-12 text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Search
+                </button>
+                <a asp-action="GetWishlist" class="btn btn-secondary" style="background-color:darkgray">
+                    <i class="bi bi-arrow-clockwise"></i> Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ViewBag.Message))
+    {
+        <div class="alert alert-info">
+            @ViewBag.Message
+        </div>
+    } else 
+    
+    {
+    
+        <h2>My Wishlist</h2>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Genres</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.Author</td>
+                        <td>@string.Join(", ", item.Genres)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div>
+            <p>Page @(Model.CurrentPage) of @(Model.TotalPages)</p>
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" style="@(i == Model.CurrentPage ? "background-color: #142c54; color: white;" : "")" href="@Url.Action("GetWishlist", new {
+                        searchTitle = ViewData["searchTitle"],
+                        searchGenre = ViewData["searchGenre"],
+                        pageNumber = i,
+                        pageSize = ViewData["pageSize"]
+                    })"> @i </a>
+                    </li>
+                }
+            </ul>
+        </div>
+     }
+   
+

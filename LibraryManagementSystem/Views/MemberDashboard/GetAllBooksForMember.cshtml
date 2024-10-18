@@ -166,7 +166,7 @@
                         </td>
                         <td>@book.PublisherName</td>
                         <td>
-                            <a asp-controller="MemberDashboard" asp-action="Index" asp-route-id="@book.Id" class="wishlist-btn btn">
+                            <a asp-controller="MemberDashboard" asp-action="ToggleWishlist" asp-route-id="@book.Id" class="wishlist-btn btn">
                                 <ion-icon name="heart-outline" class="wishlist-icon"></ion-icon>
                             </a>
                         </td>

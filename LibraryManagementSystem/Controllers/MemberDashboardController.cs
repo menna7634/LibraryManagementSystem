@@ -128,5 +128,28 @@ namespace LibraryManagementSystem.Controllers
             ViewData["Days2"] = CD;
             return View(userVM);
         }
+
+        public async Task<IActionResult> GetWishlist(int pageNumber = 1, int pageSize = 10, string? searchTitle = null, string? searchGenre = null)
+        {
+            var userId = _userRepository.GetCurrentUserId(HttpContext);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User is not logged in.");
+            }
+            var result = await _memberDashboardRepository.GetWishlistAsync(userId, pageNumber, pageSize, searchTitle, searchGenre);
+
+            if (!result.Items.Any())
+            {
+                ViewBag.Message = "No Books found for the specified Search criteria you provide";
+            }
+
+            var genres = await _libraryDbContext.Genres.ToListAsync();
+            ViewData["Genres"] = new SelectList(genres, "Name", "Name");
+            ViewData["searchTitle"] = searchTitle;
+            ViewData["searchGenre"] = searchGenre;
+
+            return View(result); 
+        }
     }
 }

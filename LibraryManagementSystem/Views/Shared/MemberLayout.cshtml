@@ -67,6 +67,15 @@
                         </a>
                     </li>
 
+                    <li>
+                        <a href="@Url.Action("GetWishlist", "MemberDashboard")"
+                           class="@(ViewContext.RouteData.Values["controller"].ToString() == "MemberDashboard" && ViewContext.RouteData.Values["action"].ToString() == "GetWishlist" ? "active" : "")">
+                            <span class="las la-heart"></span>  
+                            <small>Wishlist</small>
+                        </a>
+                    </li>
+
+
                 </ul>
             </div>
         </div>
