@@ -226,5 +226,40 @@ namespace Infrastructure.Repositories
             };
         }
 
+        public async Task<bool> ToggleWishlistAsync(string userId, int bookId)
+        {
+            var wishlist = await _libraryDbContext.Wishlists
+                .Include(w => w.WishlistBooks)
+                .FirstOrDefaultAsync(w => w.UserId == userId);
+
+            if (wishlist == null)
+            {
+                wishlist = new Wishlist
+                {
+                    UserId = userId,
+                    WishlistBooks = new List<WishlistBook>()
+                };
+                _libraryDbContext.Wishlists.Add(wishlist);
+            }
+
+            var wishlistBook = wishlist.WishlistBooks.FirstOrDefault(wb => wb.BookId == bookId);
+
+            if (wishlistBook != null)
+            {
+                wishlist.WishlistBooks.Remove(wishlistBook);
+            }
+            else
+            {
+                wishlist.WishlistBooks.Add(new WishlistBook
+                {
+                    BookId = bookId
+                });
+            }
+
+            await _libraryDbContext.SaveChangesAsync();
+            return wishlistBook == null; 
+        }
+
+
     }
 }

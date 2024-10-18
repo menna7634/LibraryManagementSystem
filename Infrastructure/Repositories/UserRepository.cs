@@ -45,6 +45,13 @@ namespace Infrastructure.Repositories
                 return IdentityResult.Failed(new IdentityError { Description = "Username already exists." });
             }
 
+            var existingUserByPhoneNumber = await _userManager.Users
+              .FirstOrDefaultAsync(u => u.PhoneNumber == model.PhoneNumber);
+            if (existingUserByPhoneNumber != null)
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Phone number already exists." });
+            }
+
             var user = new ApplicationUser
             {
                 Email = model.Email,

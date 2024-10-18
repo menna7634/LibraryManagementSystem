@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Application.ViewModels.Member;
 using Microsoft.VisualBasic;
 using Application.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -150,6 +151,21 @@ namespace LibraryManagementSystem.Controllers
             ViewData["searchGenre"] = searchGenre;
 
             return View(result); 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleWishlist(int id)
+        {
+            var userId = _userRepository.GetCurrentUserId(HttpContext);
+
+            var result = await _memberDashboardRepository.ToggleWishlistAsync(userId, id);
+
+            if (result)
+                TempData["Message"] = "Book added to wishlist!";
+            else
+                TempData["Message"] = "Book removed from wishlist!";
+
+            return RedirectToAction("GetWishlist");
         }
     }
 }

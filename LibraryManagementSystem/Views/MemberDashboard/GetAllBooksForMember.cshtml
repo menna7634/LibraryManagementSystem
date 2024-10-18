@@ -221,24 +221,31 @@
     <script src="~/js/script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const wishlistBtn = document.querySelector('.wishlist-btn');
-            const wishlistIcon = wishlistBtn.querySelector('.wishlist-icon');
+            const wishlistBtns = document.querySelectorAll('.wishlist-btn');
 
-            wishlistBtn.addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent default link behavior
+            wishlistBtns.forEach(function (wishlistBtn) {
+                wishlistBtn.addEventListener('click', function (event) {
+                    event.preventDefault(); 
 
-                // Toggle the 'active' class to switch between fill and outline
-                wishlistBtn.classList.toggle('active');
+                    wishlistBtn.classList.toggle('active');
 
-                // Toggle between 'heart-outline' and 'heart'
-                if (wishlistIcon.getAttribute('name') === 'heart-outline') {
-                    wishlistIcon.setAttribute('name', 'heart');
-                } else {
-                    wishlistIcon.setAttribute('name', 'heart-outline');
-                }
+                    const wishlistIcon = wishlistBtn.querySelector('.wishlist-icon');
+
+                    if (wishlistIcon.getAttribute('name') === 'heart-outline') {
+                        wishlistIcon.setAttribute('name', 'heart');
+                    } else {
+                        wishlistIcon.setAttribute('name', 'heart-outline');
+                    }
+                });
             });
         });
+
+       
+
+
     </script>
+
+
 
 </body>
 
