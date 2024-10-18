@@ -21,10 +21,15 @@ namespace Infrastructure.Data
         public DbSet<Penalty> Penalties { get; set; }
 
 		public DbSet<ContactForm> ContactForms { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
+
+        public DbSet<WishlistBook> WishlistBooks { get; set; }
 
 
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
@@ -93,7 +98,25 @@ namespace Infrastructure.Data
                 .WithOne(c => c.Return)
                 .HasForeignKey<Return>(r => r.CheckoutId)
                 .OnDelete(DeleteBehavior.Restrict);
+            // User and Wishlist (One-to-one) 
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(u => u.Wishlist)
+                .WithOne(w => w.User)
+                .HasForeignKey<Wishlist>(w => w.UserId);
 
+            // Wishlist and Book through WishlistBook (Many-to-Many)
+            modelBuilder.Entity<WishlistBook>()
+                .HasKey(wb => new { wb.WishlistId, wb.BookId });
+
+            modelBuilder.Entity<WishlistBook>()
+                .HasOne(wb => wb.Wishlist)
+                .WithMany(w => w.WishlistBooks)
+                .HasForeignKey(wb => wb.WishlistId);
+
+            modelBuilder.Entity<WishlistBook>()
+                .HasOne(wb => wb.Book)
+                .WithMany(b => b.WishlistBooks)
+                .HasForeignKey(wb => wb.BookId);
             // Define property constraints and configurations
             //Book
             modelBuilder.Entity<Book>()

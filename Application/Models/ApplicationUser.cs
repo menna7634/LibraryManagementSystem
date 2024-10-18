@@ -18,5 +18,8 @@ namespace Application.Models
 
         public ICollection<Penalty> Penalties { get; set; } = new List<Penalty>();
 
+        public Wishlist Wishlist { get; set; }
+
+
     }
 }

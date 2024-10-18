@@ -21,6 +21,8 @@ namespace Application.Models
 
         public ICollection<Genre> Genres { get; set; } = new List<Genre>();
 
+        public ICollection<WishlistBook> WishlistBooks { get; set; } = new List<WishlistBook>();
+
         public int PublisherId { get; set; }
         public Publisher Publisher { get; set; }
     }
