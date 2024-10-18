@@ -108,7 +108,8 @@
 
             return greeting;
         }
-        document.getElementById("greeting").innerText = `${getGreeting()} Aya Khaled`;
+    const userName = '@Model.UserName'; 
+    document.getElementById("greeting").innerText = `${getGreeting()} ${userName}`;    
     </script>
 </body>
 </html>
