@@ -146,7 +146,7 @@ namespace LibraryManagementSystem.Controllers
                 }
                 else if (roles.Contains("Member"))
                 {
-                    return RedirectToAction("Dashboard");
+                    return RedirectToAction("Profile", "MemberDashboard");
                 }
 
                 return RedirectToAction("Index", "Home");
@@ -296,6 +296,9 @@ namespace LibraryManagementSystem.Controllers
 
             var URCheckouts = await _libraryDbContext.Checkouts.Where(i => i.Status == CheckoutStatus.Overdue).CountAsync();
             ViewBag.URCheckouts = URCheckouts;
+
+            var PCheckouts = await _libraryDbContext.Checkouts.Where(i => i.Status == CheckoutStatus.Pending).CountAsync();
+            ViewBag.PCheckouts = PCheckouts;
 
             return View();
         }

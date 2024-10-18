@@ -1,0 +1,134 @@
+﻿
+.icon {
+    margin-right: 10px; /* Add space between icon and text */
+}
+
+/* Specific colors for each icon */
+.total-books {
+    color: #28a745; /* Green for total books */
+}
+
+.currently-borrowed {
+    color: #007bff; /* Blue for currently borrowed books */
+}
+
+.total-penalties {
+    color: #dc3545; /* Red for total penalties */
+}
+
+.return-notifications {
+    color: #ffc107; /* Yellow for return notifications */
+}
+
+.bio-graph-heading {
+    background: #fbc02d;
+    color: #fff;
+    text-align: center;
+    font-style: italic;
+    padding: 40px 110px;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.bio-graph-info h1 {
+    font-size: 22px;
+    font-weight: 300;
+}
+
+.bio-row {
+    width: 50%;
+    float: left;
+    margin-bottom: 10px;
+    padding: 0 15px;
+}
+
+    .bio-row p span {
+        width: 100px;
+        display: inline-block;
+    }
+
+.tile4 {
+    padding: 3rem;
+    border-radius: 8px;
+    background: #d9d9d9;
+    color: white;
+    text-align: center;
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.welcome-tile4 {
+    background-color: #142c54 !important;
+}
+
+    .welcome-tile4:hover {
+        transform: translateY(-5px);
+        background-color: #1e4e7e;
+    }
+
+.tile4-box:nth-child(1) {
+    background-color: #c0c0c0;
+}
+
+.tile4-box:nth-child(2) {
+    background-color: #b3b3b3;
+}
+
+.tile4-box:nth-child(3) {
+    background-color: #a6a6a6;
+}
+
+.tile4-box:nth-child(4) {
+    background-color: #999999;
+}
+
+.tile4-box:hover {
+    transform: translateY(-5px);
+    background-color: #b0b0b0;
+}
+
+/* Layout */
+.col-md-66 {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.panel2 {
+    margin-bottom: 20px;
+}
+
+
+.tile {
+    padding: 3rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #1f3a73, #4169a5); /* Lighter gradient */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: transform 0.25s ease, background 0.25s ease;
+    font-family: 'Poppins', sans-serif; /* Font for tiles */
+    text-align: -webkit-center;
+}
+
+    .tile:hover {
+        transform: translateY(-5px);
+        background: linear-gradient(135deg, #2b4a92, #5c8bce); /* Lighter hover effect */
+    }
+
+    /* Ensure the specific tiles have no explicit height change */
+    .tile:nth-child(2) {
+        background-color: #178f63;
+    }
+
+        .tile:nth-child(2):hover {
+            background-color: #1dbb76;
+        }
+
+    .tile:nth-child(3) {
+        background-color: #a0a0a0;
+    }
+
+        .tile:nth-child(3):hover {
+            background-color: #c0c0c0;
+        }

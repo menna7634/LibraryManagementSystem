@@ -35,7 +35,8 @@
             <div class="side-menu">
                 <ul>
                     <li>
-                        <a href="#">
+                        <a href="@Url.Action("Profile", "MemberDashboard")"
+                           class="@(ViewContext.RouteData.Values["controller"].ToString() == "MemberDashboard" && ViewContext.RouteData.Values["action"].ToString() == "Profile" ? "active" : "")">
                             <span class="las la-user-alt"></span>
                             <small>Profile</small>
                         </a>
