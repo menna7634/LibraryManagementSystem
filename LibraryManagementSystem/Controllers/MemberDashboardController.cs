@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Application.ViewModels.Member;
+using Microsoft.VisualBasic;
+using Application.Enums;
 
 namespace LibraryManagementSystem.Controllers
 {
@@ -19,7 +22,7 @@ namespace LibraryManagementSystem.Controllers
             _userRepository = userRepository;
             _libraryDbContext = libraryDbContext;
         }
-        public async Task<IActionResult> Index(string? searchTitle, string? searchGenre, string? searchAuthor,int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string? searchTitle, string? searchGenre, string? searchAuthor, int pageNumber = 1, int pageSize = 10)
         {
             var genres = await _libraryDbContext.Genres.ToListAsync();
             ViewData["Genres"] = new SelectList(genres, "Name", "Name");
@@ -40,14 +43,14 @@ namespace LibraryManagementSystem.Controllers
         public async Task<IActionResult> GetUserPenalties(int pageNumber = 1, int pageSize = 10, bool? isPaid = null)
         {
             var userId = _userRepository.GetCurrentUserId(HttpContext);
-           
+
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized("User is not logged in.");
             }
             var paginatedPenalties = await _memberDashboardRepository.GetPenaltiesByUserIdAsync(userId, pageNumber, pageSize, isPaid);
 
-            ViewData["isPaid"] = isPaid; 
+            ViewData["isPaid"] = isPaid;
             return View(paginatedPenalties);
 
         }
@@ -55,12 +58,12 @@ namespace LibraryManagementSystem.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetUserHistory(
-    int pageNumber = 1,
-    int pageSize = 10,
-    string? bookTitle = null,
-    DateTime? checkoutDate = null,
-    DateTime? dueDate = null,
-    string? returnStatus = null)
+        int pageNumber = 1,
+        int pageSize = 10,
+        string? bookTitle = null,
+        DateTime? checkoutDate = null,
+        DateTime? dueDate = null,
+        string? returnStatus = null)
         {
             var userId = _userRepository.GetCurrentUserId(HttpContext);
 
@@ -86,6 +89,44 @@ namespace LibraryManagementSystem.Controllers
             return View(history);
         }
 
-
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var userId = _userRepository.GetCurrentUserId(HttpContext);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User is not logged in.");
+            }
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var userVM = new UserVM
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                JoinedAt = user.JoinedAT,
+                Address = user.Address,
+                DateOfBirth = user.DateOfBirth,
+                PhoneNumber = user.PhoneNumber,
+                Gender = user.Gender,
+            };
+            var CD = DateTime.Today;
+            var d=CD.AddDays(3);
+            var books = await _libraryDbContext.Checkouts.Where(i=>i.ApplicationUserId==userId).CountAsync();//T
+            var penalities = _libraryDbContext.Penalties.Where(i => i.ApplicationUserId == userId).Where(i=>i.IsPaid==false).Sum(a=>a.Amount);//T
+            var currentCheclouts = await _libraryDbContext.Checkouts.Where((i => i.ApplicationUserId == userId && i.Status != CheckoutStatus.Returned)).CountAsync();//T
+            var over = await _libraryDbContext.Checkouts.Where((u=>u.ApplicationUserId==userId)).ToListAsync();
+            var overdue = over.Where(i => i.DueDate >= CD && i.DueDate <= d && i.Status == CheckoutStatus.Pending).Count();
+            ViewData["books"] = books;
+            ViewData["penalties"] = penalities;
+            ViewData["currentCheckouts"] = currentCheclouts;
+            ViewData["overdue"] = overdue;
+            ViewData["Days"] = d;
+            ViewData["Days2"] = CD;
+            return View(userVM);
+        }
     }
 }

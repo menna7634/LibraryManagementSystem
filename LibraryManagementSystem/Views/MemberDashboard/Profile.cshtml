@@ -1,0 +1,114 @@
+﻿@model Application.ViewModels.Member.UserVM
+@{
+    Layout = "MemberLayout";
+    ViewData["Title"] = "Profile";
+}
+<html lang="en">
+<head>
+    <style>
+        body {
+            color: #797979;
+            background: #f1f2f7;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .icon1 {
+            margin-right: 10px;
+            color: #007bff;
+        }
+
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="~/css/mdashboard.css">
+</head>
+
+<body>
+    <div class="profile-info col-md-9" style="margin-top:10%; margin-left:10%">
+        <div class="panel2">
+            <div class="tile" style="min-height: 100px; font-size: x-large; font-family: cursive; text-align: center; padding-top: 3%" id="greeting">
+            </div>
+            <div class="panel-body bio-graph-info" style="margin-top:2%">
+                <h1>Information</h1>
+                <div class="row" style="font-size: larger">
+                    <div class="bio-row">
+                        <p><i class="fas fa-user icon1"></i><span>Name: </span> @Model.UserName</p>
+                    </div>
+                    <div class="bio-row">
+                        <p><i class="fas fa-calendar-alt icon1"></i><span>Joined At: </span> @Model.JoinedAt</p>
+                    </div>
+                    <div class="bio-row">
+                        <p><i class="fas fa-map-marker-alt icon1"></i><span>Address: </span> @Model.Address</p>
+                    </div>
+                    <div class="bio-row">
+                        <p><i class="fas fa-birthday-cake icon1"></i><span>Birthday: </span> @Model.DateOfBirth.ToString("yyyy/MM/dd")</p>
+                    </div>
+                    <div class="bio-row">
+                        <p><i class="fas fa-venus icon1"></i><span>Gender: </span> @Model.Gender</p>
+                    </div>
+                    <div class="bio-row">
+                        <p><i class="fas fa-envelope icon1"></i><span>Email: </span> @Model.Email</p>
+                    </div>
+                    <div class="bio-row">
+                        <p><i class="fas fa-phone icon1"></i><span>Mobile: </span> @Model.PhoneNumber</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="font-size: larger;font-weight: bold">
+            <div class="col-md-6">
+                <div class="panel2">
+                    <div class="tile4 tile4-box">
+                        <i class="fas fa-th-list fa-2x icon total-books"></i> Total Books:  @(ViewData["books"] != null ? ViewData["books"] : 0)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel2">
+                    <div class="tile4 tile4-box">
+                        <i class="fas fa-book-open fa-2x icon currently-borrowed"></i> Books Currently Borrowed:  @(ViewData["currentCheckouts"] != null ? ViewData["currentCheckouts"] : 0)
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="panel2">
+                    <div class="tile4 tile4-box">
+                        <i class="fas fa-exclamation-triangle fa-2x icon total-penalties"></i> Total Penalties:  @(ViewData["penalties"] != null ? ViewData["penalties"] : 0)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel2">
+                    <div class="tile4 tile4-box">
+                        <i class="fas fa-bell fa-2x icon return-notifications"></i> You have @ViewData["overdue"] books due in 3 days!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        function getGreeting() {
+            const now = new Date();
+            const hours = now.getHours();
+            let greeting;
+
+            if (hours < 12) {
+                greeting = "Good Morning";
+            } else if (hours < 18) {
+                greeting = "Good Afternoon";
+            } else {
+                greeting = "Good Evening";
+            }
+
+            return greeting;
+        }
+        document.getElementById("greeting").innerText = `${getGreeting()} Aya Khaled`;
+    </script>
+</body>
+</html>
