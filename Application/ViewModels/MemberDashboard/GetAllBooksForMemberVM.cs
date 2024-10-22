@@ -16,5 +16,7 @@ namespace Application.ViewModels.MemberDashboard
         public List<string> Genres { get; set; }
         public int? PublisherId { get; set; }
         public string PublisherName { get; set; }
+        public bool IsInWishlist { get; set; } = false;
+
     }
 }

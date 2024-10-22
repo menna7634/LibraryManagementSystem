@@ -1,9 +1,12 @@
 ﻿@model Application.Helpers.PaginatedResult<Application.ViewModels.MemberDashboard.GetAllBooksForMemberVM>
+
 @{
     Layout = "MemberLayout";
 }
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "ToggleWishlist";
+    var successMessage = TempData["Message2"] as string;
+
 }
 <html lang="en" dir="ltr">
 
@@ -70,6 +73,10 @@
                 pointer-events: none; /* Prevent the icon from interfering with dropdown interaction */
             }
 
+        .filled-heart {
+            color: black; /* هنا تحط اللون اللي عايزاه للقلب لما يبقى مملوء */
+        }
+
     </style>
 </head>
 <body>
@@ -114,6 +121,12 @@
             </div>
         </form>
     </div>
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success">
+            @successMessage
+        </div>
+    }
     @if (!string.IsNullOrEmpty(ViewBag.Message))
     {
         <div class="alert alert-info">
@@ -166,9 +179,12 @@
                         </td>
                         <td>@book.PublisherName</td>
                         <td>
-                            <a asp-controller="MemberDashboard" asp-action="ToggleWishlist" asp-route-id="@book.Id" class="wishlist-btn btn">
-                                <ion-icon name="heart-outline" class="wishlist-icon"></ion-icon>
-                            </a>
+                             <form asp-controller="MemberDashboard" asp-action="ToggleWishlist" asp-route-id="@book.Id" method="post" class="wishlist-form">
+                                <button type="submit" class="wishlist-btn btn">
+                                    <ion-icon class="wishlist-icon @(book.IsInWishlist ? "filled-heart" : "")" name="@(book.IsInWishlist ? "heart" : "heart-outline")"></ion-icon>
+                                </button>
+                            </form> 
+
                         </td>
                     </tr>
                 }
@@ -219,34 +235,7 @@
 
     }
     <script src="~/js/script.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const wishlistBtns = document.querySelectorAll('.wishlist-btn');
-
-            wishlistBtns.forEach(function (wishlistBtn) {
-                wishlistBtn.addEventListener('click', function (event) {
-                    event.preventDefault(); 
-
-                    wishlistBtn.classList.toggle('active');
-
-                    const wishlistIcon = wishlistBtn.querySelector('.wishlist-icon');
-
-                    if (wishlistIcon.getAttribute('name') === 'heart-outline') {
-                        wishlistIcon.setAttribute('name', 'heart');
-                    } else {
-                        wishlistIcon.setAttribute('name', 'heart-outline');
-                    }
-                });
-            });
-        });
-
-       
-
-
-    </script>
-
-
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 
 

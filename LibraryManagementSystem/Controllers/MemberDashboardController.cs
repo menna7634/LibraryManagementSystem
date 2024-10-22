@@ -27,7 +27,9 @@ namespace LibraryManagementSystem.Controllers
         {
             var genres = await _libraryDbContext.Genres.ToListAsync();
             ViewData["Genres"] = new SelectList(genres, "Name", "Name");
-            var books = await _memberDashboardRepository.GetAllBooksAsync(searchTitle, searchGenre, searchAuthor, pageNumber, pageSize);
+            //get current user id for wishlist
+            var userId = _userRepository.GetCurrentUserId(HttpContext);
+            var books = await _memberDashboardRepository.GetAllBooksAsync(userId, searchTitle, searchGenre, searchAuthor, pageNumber, pageSize);
             if (!books.Items.Any())
             {
                 ViewBag.Message = "No Books found for the specified Search criteria you provide";
@@ -161,11 +163,16 @@ namespace LibraryManagementSystem.Controllers
             var result = await _memberDashboardRepository.ToggleWishlistAsync(userId, id);
 
             if (result)
-                TempData["Message"] = "Book added to wishlist!";
+            {
+                TempData["Message2"] = "Book added to wishlist!";
+                return RedirectToAction("GetWishlist");
+            }
             else
-                TempData["Message"] = "Book removed from wishlist!";
+            {
+                TempData["Message2"] = "Book removed from wishlist!";
+                return RedirectToAction("Index");
+            }
 
-            return RedirectToAction("GetWishlist");
         }
     }
 }
