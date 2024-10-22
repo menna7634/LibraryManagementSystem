@@ -80,7 +80,7 @@
 <body>
     <div class="container">
         <div class="login-form">
-            <h2>Login2</h2>
+            <h2 style="font-family:math">Login</h2>
             @if (ViewBag.ErrorMessage != null)
             {
                 <div class="alert alert-danger">
@@ -95,18 +95,19 @@
                 <input asp-for="Email" type="email" id="email" placeholder="you@email.com" required>
                 <span asp-validation-for="Email" class="text-danger"></span>
 
-                <div style="display:inline-grid">
-                <label asp-for="Password" for="password">Password</label>
-                <input asp-for="Password" type="password" id="password" placeholder="Enter 6 characters or more">
-                    <button type="button" class="btn-toggle-password" style="margin-right: 62.5%;margin-top: 23.9%">
+                <div style="position: relative; display: inline-block; width: 100%;">
+                    <label asp-for="Password" for="password">Password</label>
+                    <input asp-for="Password" type="password" id="password" placeholder="Enter your Password" style="width: 100%; padding-right: 50px;">
+                    <button type="button" class="btn-toggle-password" style="position: absolute; right: 10px; top: 60%; transform: translateY(-50%);">
                         Show
                     </button>
-                 <span asp-validation-for="Password" class="text-danger"></span>
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
+
+
                 <div class="options">
-                    <input asp-for="RememberMe" type="checkbox" id="remember">
-                    <label asp-for="RememberMe">Remember me</label>
+                    
                     <a asp-area="" asp-controller="Account" asp-action="RequestResetPassword">Forget Password?</a>
                 </div>
 
